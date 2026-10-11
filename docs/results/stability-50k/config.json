@@ -1,0 +1,99 @@
+{
+  "config": {
+    "label": "stability-50k",
+    "env": {
+      "demand_seconds": 3600,
+      "drain_seconds": 1800,
+      "decision_seconds": 5,
+      "min_green": 10,
+      "max_green": 60,
+      "yellow_seconds": 3,
+      "all_red_seconds": 1,
+      "wait_threshold": 90.0,
+      "queue_scale": 80.0,
+      "wait_scale": 180.0
+    },
+    "training_steps": 50000,
+    "training_seeds": [
+      11
+    ],
+    "validation_seeds": [
+      1001,
+      1002,
+      1003,
+      1004,
+      1005
+    ],
+    "test_seeds": [
+      3001,
+      3002,
+      3003,
+      3004,
+      3005,
+      3006,
+      3007,
+      3008,
+      3009,
+      3010
+    ],
+    "scenarios": [
+      "balanced",
+      "imbalanced",
+      "changing_peak"
+    ],
+    "methods": [
+      "fixed",
+      "actuated",
+      "aging",
+      "dqn_queue",
+      "dqn_wait",
+      "dqn_fair"
+    ],
+    "fair_weights": [
+      0.1,
+      0.3,
+      1.0
+    ],
+    "hidden": [
+      128,
+      128
+    ],
+    "learning_starts": 1000,
+    "buffer_size": 50000,
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "gamma": 0.99,
+    "train_freq": 4,
+    "target_update_interval": 1000,
+    "exploration_fraction": 0.5,
+    "fixed_candidates": [
+      [
+        25,
+        10,
+        25,
+        10
+      ],
+      [
+        20,
+        10,
+        40,
+        10
+      ],
+      [
+        35,
+        10,
+        35,
+        10
+      ]
+    ],
+    "actuated_min_candidates": [
+      10,
+      20
+    ],
+    "aging_candidates": [
+      0.1,
+      0.3
+    ]
+  },
+  "source_sha256": "fe9c58361a5d6c2b15d26d56e99ae290dbd7d41c27f4e690e7a57b3cc9331b5e"
+}

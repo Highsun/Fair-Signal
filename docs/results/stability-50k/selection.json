@@ -1,0 +1,58 @@
+{
+  "fixed": {
+    "candidate": 0,
+    "parameters": {
+      "durations": [
+        25,
+        10,
+        25,
+        10
+      ]
+    },
+    "validation_eligible": true,
+    "diagnostic_only": false
+  },
+  "actuated": {
+    "candidate": 0,
+    "parameters": {
+      "minimum": 10,
+      "hysteresis": 1.0
+    },
+    "validation_eligible": true,
+    "diagnostic_only": false
+  },
+  "aging": {
+    "candidate": 0,
+    "parameters": {
+      "minimum": 10,
+      "hysteresis": 1.0,
+      "aging_weight": 0.1
+    },
+    "validation_eligible": true,
+    "diagnostic_only": false
+  },
+  "dqn_queue": {
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 0.0
+    },
+    "validation_eligible": true,
+    "diagnostic_only": false
+  },
+  "dqn_wait": {
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 0.0
+    },
+    "validation_eligible": true,
+    "diagnostic_only": false
+  },
+  "dqn_fair": {
+    "candidate": 2,
+    "parameters": {
+      "fair_weight": 1.0
+    },
+    "validation_eligible": true,
+    "diagnostic_only": false
+  }
+}

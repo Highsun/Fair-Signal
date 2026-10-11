@@ -1,6 +1,6 @@
 # 实验方案
 
-状态：首轮短跑和 GUI 演示已完成；下一步执行 [5 万步加长验证](stability-results.md)，
+状态：首轮短跑、GUI 演示和 [5 万步加长验证](stability-results.md) 已完成；
 正式多种子实验尚未执行。
 本页保留研究设计，具体已实现参数、状态维度、计时和指标口径见
 [实现说明](implementation.md)，执行命令见 [运行指南](running.md)。

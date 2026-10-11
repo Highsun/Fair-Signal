@@ -46,6 +46,28 @@ pilot 需求注入 900 秒，额外清空上限 900 秒；正式需求注入 360
 不要手改已有输出再继续实验。修改代码或参数时选择新目录，例如 `outputs/pilot-v2`。
 中止可按 Ctrl+C，finally 会关闭当前 SUMO 连接；不要删除其他项目的进程。
 
+## 加长训练的验证实验
+
+介于短跑与完整多种子实验之间，`configs/stability.yaml` 固定 5 个模型、每个 5 万步、
+1 个训练种子、3600 秒需求和最多 1800 秒清空；14 个验证候选共 210 回合。
+这一阶段只训练和验证，不执行最终测试：
+
+```bash
+bash scripts/run.sh fair-signal run --config configs/stability.yaml \
+  --output outputs/stability-50k --stage train
+bash scripts/run.sh fair-signal run --config configs/stability.yaml \
+  --output outputs/stability-50k --stage tune
+bash scripts/run.sh python scripts/summarize_validation.py --run outputs/stability-50k
+bash scripts/run.sh tensorboard --logdir outputs/stability-50k/models --host 127.0.0.1
+```
+
+汇总脚本校验完整候选矩阵、同车流匹配与模型校验值，拒绝混入测试记录，
+将小体积指标和图表导出至 `docs/results/stability-50k/`。
+`reward_activation.csv` 只统计固定需求窗口：任一车道停车队首超过 90 秒的逐秒比例，
+等价于公平惩罚项非零的比例；它不等于惩罚幅度，也不是车辆超时比例。
+超过 180 秒的比例用于检查队首等待观测可能发生的裁剪，不能反映所有状态分量。
+完整方案与实际结果见 [加长验证记录](stability-results.md)。
+
 ## 产物
 
 ```text
