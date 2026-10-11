@@ -1,0 +1,15 @@
+{
+  "purpose": "posthoc_development_hybrid_validation",
+  "threshold": 180,
+  "validation_cases": 105,
+  "complete_cases": 105,
+  "unfinished_vehicles": 0,
+  "pending_insertion": 0,
+  "collisions": 0,
+  "teleports": 0,
+  "signal_constraints_checked_cases": 105,
+  "training_performed": false,
+  "test_evaluated": false,
+  "summarizer_sha256": "f8ea1ab42a5d0f46e6131485b5cfcfd59e4ecf0678c803d8de3a5012be92b9cf",
+  "raw_validation_sha256": "5d7de86a3b378e0c1e24266166230a412f62c92f247eb4a58dc99996cc05653a"
+}

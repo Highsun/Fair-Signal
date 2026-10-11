@@ -126,6 +126,22 @@ bash scripts/run.sh tensorboard --logdir outputs/long-budget-150k/trajectories -
 新验证共 300 回合，预留最终测试不生成、不运行。
 实验设计与实际结果见 [长预算记录](long-budget-results.md)。
 
+## 共享服务护栏对照
+
+```bash
+# 先完成上面的 15 万步实验；复用六个固定末端模型，无新增训练
+bash scripts/run.sh python scripts/guard_study.py --workers 3
+bash scripts/run.sh python scripts/summarize_guard_study.py
+```
+
+固定 180 秒请求年龄阈值，同一护栏用于普通 DQN、Fair DQN 与感应式。
+原始病例、实际相位轨迹与每个决策的 proposed/executed/overridden 记录在
+`outputs/service-guard-150k/evaluation/`；小体积导出在 `docs/results/service-guard-150k/`。
+混合控制器分别命名为 `dqn_queue_guard`、`dqn_fair_guard`、`actuated_guard`，
+不会修改原策略模型或替换原实验结果。程序会核查脚本、护栏、核心与模型摘要。
+这轮没有新增模型训练，因此护栏输出目录没有新的 TensorBoard；
+其基础模型的训练曲线仍在上面的 `long-budget-150k/trajectories/`。
+
 ## 产物
 
 ```text
