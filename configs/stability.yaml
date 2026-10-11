@@ -1,0 +1,12 @@
+# Intermediate validation experiment; final test seeds remain unexamined.
+label: stability-50k
+env:
+  demand_seconds: 3600
+  drain_seconds: 1800
+training_steps: 50000
+training_seeds: [11]
+validation_seeds: [1001, 1002, 1003, 1004, 1005]
+test_seeds: [3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009, 3010]
+scenarios: [balanced, imbalanced, changing_peak]
+methods: [fixed, actuated, aging, dqn_queue, dqn_wait, dqn_fair]
+fair_weights: [0.1, 0.3, 1.0]
