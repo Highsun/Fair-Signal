@@ -1,0 +1,17 @@
+# Frozen before training; no sweep or final test in this development experiment.
+label: fair-state-50k-3seed
+env:
+  demand_seconds: 3600
+  drain_seconds: 1800
+training_steps: 50000
+training_seeds: [11, 22, 33]
+validation_seeds: [1001, 1002, 1003, 1004, 1005]
+test_seeds: [3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009, 3010]
+scenarios: [balanced, imbalanced, changing_peak]
+methods: [dqn_fair_state]
+fair_weights: [1.0]
+# At wait=90s this adds approximately 30% per stopped vehicle, before queue scaling.
+dense_fair_weight: 0.3
+fixed_candidates: [[25, 10, 25, 10]]
+actuated_min_candidates: [10]
+aging_candidates: [0.1]

@@ -15,6 +15,7 @@ from fair_signal.controllers import TraditionalController
 from fair_signal.demand import save_json, sha256
 from fair_signal.environment import TrafficEnv
 from fair_signal.experiment import source_digest
+from fair_signal.objectives import policy_options
 from fair_signal.runtime import output_directory
 
 
@@ -59,8 +60,7 @@ def check_case(job: dict) -> dict:
         EnvConfig(**identity["environment"]),
         network,
         destination,
-        enhanced=method != "dqn_queue",
-        fair_weight=params.get("fair_weight", 0),
+        **policy_options(method, params),
         route_file=route,
         sumo_seed=traffic,
         trace=audit,
@@ -110,11 +110,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default="outputs/legacy-improvement-check")
     parser.add_argument("--workers", type=int, choices=[1, 2, 3], default=2)
+    parser.add_argument("--include-improvement", action="store_true")
     args = parser.parse_args()
     output = output_directory(args.output)
     output.mkdir(parents=True, exist_ok=True)
     jobs = []
-    for name, split in (("pilot", "test"), ("stability-50k", "validation")):
+    runs = [("pilot", "test"), ("stability-50k", "validation")]
+    if args.include_improvement:
+        runs.append(("improvement-50k", "validation"))
+    for name, split in runs:
         run = output_directory(f"outputs/{name}")
         frame = pd.read_csv(run / f"{split}.csv")
         jobs.extend(
@@ -138,5 +142,6 @@ if __name__ == "__main__":
             "all_metrics_identical": True,
             "pilot_cases": 36,
             "stability_cases": 210,
+            "improvement_cases": 270 if args.include_improvement else 0,
         },
     )

@@ -99,7 +99,7 @@ def candidates(config: ExperimentConfig, method: str) -> list[dict]:
             for value in config.actuated_min_candidates
             for weight in config.aging_candidates
         ]
-    if method == "dqn_fair":
+    if method in ("dqn_fair", "dqn_fair_state"):
         return [{"fair_weight": value} for value in config.fair_weights]
     if method in ("dqn_dense", "dqn_dense_state"):
         return [{"fair_weight": config.dense_fair_weight}]

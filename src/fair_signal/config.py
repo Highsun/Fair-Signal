@@ -16,6 +16,7 @@ METHODS = (
     "dqn_fair",
     "dqn_dense",
     "dqn_dense_state",
+    "dqn_fair_state",
 )
 SCENARIOS = ("balanced", "imbalanced", "changing_peak")
 

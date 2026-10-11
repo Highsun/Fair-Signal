@@ -22,5 +22,7 @@ def policy_options(method: str, parameters: dict) -> dict:
         "reward_mode": "vehicle_quadratic"
         if method in ("dqn_dense", "dqn_dense_state")
         else "head_threshold",
-        "observation_mode": "service" if method == "dqn_dense_state" else "legacy",
+        "observation_mode": "service"
+        if method in ("dqn_dense_state", "dqn_fair_state")
+        else "legacy",
     }

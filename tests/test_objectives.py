@@ -55,4 +55,13 @@ def test_variant_mapping_keeps_legacy_algorithms_and_default_matrix():
     }
     assert policy_options("dqn_dense", {})["observation_mode"] == "legacy"
     assert policy_options("dqn_dense_state", {})["reward_mode"] == "vehicle_quadratic"
+    options = policy_options("dqn_fair_state", {"fair_weight": 1.0})
+    assert options["observation_mode"] == "service"
+    assert options["reward_mode"] == "head_threshold"
+    assert options["fair_weight"] == 1.0
+    from fair_signal.experiment import candidates
+
+    assert candidates(ExperimentConfig(fair_weights=[1.0]), "dqn_fair_state") == [
+        {"fair_weight": 1.0}
+    ]
     assert len(ExperimentConfig().methods) == 6
