@@ -1,0 +1,4 @@
+method,candidate,parameters,scenario,valid_cases,cases,all_cases_complete,unfinished_vehicles,pending_insertion,collision_events,teleport_events,mean_wait,p95_wait,over_threshold_fraction,mean_queue,mean_depart_delay
+dqn_fair_state,0,"{""fair_weight"": 1.0}",balanced,15,15,True,0,0,0,0,16.78728259460604,57.6533333333333,0.014878849062608,5.25898148148148,0.5278530257653726
+dqn_fair_state,0,"{""fair_weight"": 1.0}",changing_peak,15,15,True,0,0,0,0,15.497306786988476,57.92666666666664,0.014873224972667591,4.810277777777778,0.5421385335197011
+dqn_fair_state,0,"{""fair_weight"": 1.0}",imbalanced,15,15,True,0,0,0,0,14.801861968824229,57.76666666666664,0.015428811271378148,4.788018518518518,0.5408867931962379

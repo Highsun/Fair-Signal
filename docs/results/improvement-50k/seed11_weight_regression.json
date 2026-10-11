@@ -1,0 +1,23 @@
+[
+  {
+    "method": "dqn_queue",
+    "seed": 11,
+    "old_candidate": 0,
+    "new_candidate": 0,
+    "online_and_target_identical": true
+  },
+  {
+    "method": "dqn_wait",
+    "seed": 11,
+    "old_candidate": 0,
+    "new_candidate": 0,
+    "online_and_target_identical": true
+  },
+  {
+    "method": "dqn_fair",
+    "seed": 11,
+    "old_candidate": 2,
+    "new_candidate": 0,
+    "online_and_target_identical": true
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "purpose": "development_validation_only",
+  "sources": [
+    {
+      "run": "improvement-50k",
+      "source_sha256": "66ef1163dde41f95001dcb877ca39e6a9a606fa283998db441d723f55b227617",
+      "validation_sha256": "aa068e9da404cb59d544b60dadf874738f793e17e2d55350229eab5975e174c9",
+      "config_sha256": "8bc545be10aa2e1ac220fca5cf2ad5831750071812039b0b9585a987dd5f5b82",
+      "cases": 270,
+      "models": 15,
+      "execution": {
+        "wall_seconds": 1094.2336350000005,
+        "training_workers": 3,
+        "test_performance_evaluated": false
+      },
+      "provenance": {
+        "git_revision": "3fb20a0ef8a2f6ce692c5e814362f9b9ad93bb1f",
+        "git_dirty": false,
+        "source_sha256": "66ef1163dde41f95001dcb877ca39e6a9a606fa283998db441d723f55b227617",
+        "platform": "macOS-27.0.1-arm64-arm-64bit",
+        "device": "cpu",
+        "torch_threads": 1,
+        "versions": {
+          "torch": "2.14.1",
+          "stable-baselines3": "2.9.0",
+          "gymnasium": "1.2.3",
+          "traci": "1.28.0",
+          "numpy": "2.5.4"
+        },
+        "selection_rule": "mean(mean_wait + 0.5*p95_wait); require complete cases; all failed: candidate 0 is diagnostic only"
+      }
+    },
+    {
+      "run": "fair-state-50k",
+      "source_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+      "validation_sha256": "c1dbccad7d69e466eb0fd5a77a1abde21087ee6c59a6171cfd3e978e844398f6",
+      "config_sha256": "eefa3efdae81530bb7d8de534d696e465c413305e5f8822d5f174cd24faefa6f",
+      "cases": 45,
+      "models": 3,
+      "execution": {
+        "wall_seconds": 223.53304591699998,
+        "training_workers": 3,
+        "test_performance_evaluated": false
+      },
+      "provenance": {
+        "git_revision": "43e8113a4871a9eefd3b019f962528dc8da7c5b7",
+        "git_dirty": false,
+        "source_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+        "platform": "macOS-27.0.1-arm64-arm-64bit",
+        "device": "cpu",
+        "torch_threads": 1,
+        "versions": {
+          "torch": "2.14.1",
+          "stable-baselines3": "2.9.0",
+          "gymnasium": "1.2.3",
+          "traci": "1.28.0",
+          "numpy": "2.5.4"
+        },
+        "selection_rule": "mean(mean_wait + 0.5*p95_wait); require complete cases; all failed: candidate 0 is diagnostic only"
+      }
+    }
+  ],
+  "current_source_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+  "historical_replay_cases": 516,
+  "validation_cases": 315,
+  "complete_cases": 315,
+  "models": 18,
+  "test_performance_evaluated": false,
+  "note": "The fair-state cell follows observed development results; no final test or additional weight search."
+}

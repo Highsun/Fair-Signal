@@ -17,6 +17,24 @@
       "viewer_sha256": "66ef1163dde41f95001dcb877ca39e6a9a606fa283998db441d723f55b227617",
       "reason": "Legacy observation/reward branches unchanged; new variants are opt-in",
       "verification": "All 36 original test and 210 stability validation cases reproduce every metric exactly"
+    },
+    {
+      "source_sha256": "f4ba62f4454c52fb0c2f10c49d127fce6771b215ac639d9f27b019fdc399f812",
+      "viewer_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+      "reason": "Add opt-in original fairness with service state; all existing policy branches unchanged",
+      "verification": "All 36 pilot, 210 stability and 270 improvement validation cases reproduce every metric exactly; docs/results/factorial-50k/legacy_check.json"
+    },
+    {
+      "source_sha256": "fe9c58361a5d6c2b15d26d56e99ae290dbd7d41c27f4e690e7a57b3cc9331b5e",
+      "viewer_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+      "reason": "Add opt-in original fairness with service state; all existing policy branches unchanged",
+      "verification": "All 36 pilot, 210 stability and 270 improvement validation cases reproduce every metric exactly; docs/results/factorial-50k/legacy_check.json"
+    },
+    {
+      "source_sha256": "66ef1163dde41f95001dcb877ca39e6a9a606fa283998db441d723f55b227617",
+      "viewer_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+      "reason": "Add opt-in original fairness with service state; all existing policy branches unchanged",
+      "verification": "All 36 pilot, 210 stability and 270 improvement validation cases reproduce every metric exactly; docs/results/factorial-50k/legacy_check.json"
     }
   ]
 }

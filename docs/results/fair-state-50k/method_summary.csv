@@ -1,0 +1,2 @@
+method,candidate,parameters,valid_cases,cases,all_cases_complete,mean_wait,p95_wait,over_threshold_fraction,mean_queue,mean_depart_delay
+dqn_fair_state,0,"{""fair_weight"": 1.0}",45,45,True,15.695483783472914,57.782222222222195,0.015060295102217914,4.952425925925925,0.536959450827104

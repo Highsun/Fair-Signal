@@ -1,0 +1,71 @@
+[
+  {
+    "method": "dqn_fair_state",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 1.0
+    },
+    "seed": 11,
+    "decision_steps": 50000,
+    "gradient_updates": 12250,
+    "completed_episodes": 67,
+    "seconds": 182.2793601250014,
+    "steps_per_second": 274.30423261147934,
+    "model_sha256": "e15f61e61933768e78607094aaa69c1ad8d40cc04fb2d88ade5ee8da5e5072c3",
+    "source_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+    "save_reload_action_matches": true,
+    "network_parameters": 22788,
+    "policy_options": {
+      "enhanced": true,
+      "fair_weight": 1.0,
+      "reward_mode": "head_threshold",
+      "observation_mode": "service"
+    }
+  },
+  {
+    "method": "dqn_fair_state",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 1.0
+    },
+    "seed": 22,
+    "decision_steps": 50000,
+    "gradient_updates": 12250,
+    "completed_episodes": 67,
+    "seconds": 183.4633350840013,
+    "steps_per_second": 272.53401872971943,
+    "model_sha256": "5b70af875761b65cd47cec76b681c82b4c10c6bc247701bc90d31d87f2c250d8",
+    "source_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+    "save_reload_action_matches": true,
+    "network_parameters": 22788,
+    "policy_options": {
+      "enhanced": true,
+      "fair_weight": 1.0,
+      "reward_mode": "head_threshold",
+      "observation_mode": "service"
+    }
+  },
+  {
+    "method": "dqn_fair_state",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 1.0
+    },
+    "seed": 33,
+    "decision_steps": 50000,
+    "gradient_updates": 12250,
+    "completed_episodes": 66,
+    "seconds": 183.01372912499937,
+    "steps_per_second": 273.2035472915244,
+    "model_sha256": "7022c091991807cfcd8f6463b749530471dd766cac0376801afbe2b80b28d1ff",
+    "source_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+    "save_reload_action_matches": true,
+    "network_parameters": 22788,
+    "policy_options": {
+      "enhanced": true,
+      "fair_weight": 1.0,
+      "reward_mode": "head_threshold",
+      "observation_mode": "service"
+    }
+  }
+]

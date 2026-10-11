@@ -71,6 +71,7 @@ bash scripts/run.sh tensorboard --logdir outputs/stability-50k/models --host 127
 ## 改进算法的三种子验证
 
 ```bash
+# 首批 15 个模型对应源码版本 b90018e；复现/重导出时使用该版本
 # 固定 15 个模型、每个 5 万步；三个独立 CPU 工作进程
 bash scripts/run.sh python scripts/improvement_study.py run --workers 3
 # 可改 --workers 1 串行；完成模型与验证回合会校验后复用
@@ -79,12 +80,25 @@ bash scripts/run.sh python scripts/summarize_validation.py --run outputs/improve
 bash scripts/run.sh python scripts/improvement_study.py summarize
 bash scripts/run.sh tensorboard --logdir outputs/improvement-50k/models --host 127.0.0.1
 
-# 复核历史行为；会启动 246 次短跑/加长仿真
-bash scripts/run.sh python scripts/check_legacy.py --workers 2
+# 当前版本补充：原公平奖励＋44 维状态，三个种子
+bash scripts/run.sh python scripts/improvement_study.py run \
+  --config configs/fair-state.yaml --output outputs/fair-state-50k --workers 3
+bash scripts/run.sh python scripts/summarize_validation.py --run outputs/fair-state-50k \
+  --destination docs/results/fair-state-50k
+
+# 复核历史行为：246 个早期回合＋270 个首批改进回合
+bash scripts/run.sh python scripts/check_legacy.py --include-improvement \
+  --output outputs/legacy-fair-state-check --workers 2
+# 校验两个已导出的冻结实验，生成四格对照表与图
+bash scripts/run.sh python scripts/summarize_factorial.py
 
 # 观看新状态版本，复用已见过的开发种子 2001，不作为最终测试
 bash scripts/watch.sh --run outputs/improvement-50k --method dqn_dense_state --seed 11
 ```
+
+首批源码摘要与补充试验不同，原输出目录不能在新源码下续跑或重导出。
+需要复现首批时，在相应版本的独立检出中运行，勿重置有修改的工作区。
+四格汇总明确保留两个来源摘要，并要求历史行为回归通过，不绕过原身份检查。
 
 三个种子 11/22/33 共享固定配置，分别写入自身模型目录；父进程评估传统基线。
 该脚本只创建验证车流，不生成预留最终测试车流。程序只在所有工作进程成功后统一选参；

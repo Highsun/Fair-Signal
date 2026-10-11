@@ -87,6 +87,7 @@ def check_case(job: dict) -> dict:
         "run": run.name,
         "method": method,
         "candidate": candidate,
+        "training_seed": seed,
         "scenario": scenario,
         "traffic_seed": traffic,
         "all_metrics_identical": True,

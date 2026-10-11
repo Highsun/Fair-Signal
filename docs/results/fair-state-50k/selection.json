@@ -1,0 +1,10 @@
+{
+  "dqn_fair_state": {
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 1.0
+    },
+    "validation_eligible": true,
+    "diagnostic_only": false
+  }
+}

@@ -185,3 +185,7 @@ TripInfo 已完成数须等于计划车辆数才可标记 valid_complete。
 新训练回合记录 queue_cost、fair_cost、weighted_fair_cost 与触发比例的决策步均值，
 同时记录到 `traffic/` TensorBoard 标签。实际奖励的定义、检查发现与独立对照设计见
 [改进实验记录](improvement-results.md)。
+
+`dqn_fair_state` 保留原 `head_threshold` 公平奖励及验证选定的权重，
+只启用 44 维 `service` 观测；它与两种连续奖励变体构成奖励×状态四格消融。
+默认六方法列表不变，补充对照由 `configs/fair-state.yaml` 显式启用。

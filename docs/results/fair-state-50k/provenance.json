@@ -1,0 +1,16 @@
+{
+  "git_revision": "43e8113a4871a9eefd3b019f962528dc8da7c5b7",
+  "git_dirty": false,
+  "source_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "device": "cpu",
+  "torch_threads": 1,
+  "versions": {
+    "torch": "2.14.1",
+    "stable-baselines3": "2.9.0",
+    "gymnasium": "1.2.3",
+    "traci": "1.28.0",
+    "numpy": "2.5.4"
+  },
+  "selection_rule": "mean(mean_wait + 0.5*p95_wait); require complete cases; all failed: candidate 0 is diagnostic only"
+}

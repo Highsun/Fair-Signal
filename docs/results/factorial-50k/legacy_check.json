@@ -1,0 +1,8 @@
+{
+  "viewer_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+  "cases": 516,
+  "all_metrics_identical": true,
+  "pilot_cases": 36,
+  "stability_cases": 210,
+  "improvement_cases": 270
+}

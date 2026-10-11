@@ -1,0 +1,11 @@
+[
+  {
+    "method": "dqn_fair_state",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 1.0
+    },
+    "validation_score": 44.58659489458401,
+    "all_cases_complete": true
+  }
+]
