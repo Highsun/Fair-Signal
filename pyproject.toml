@@ -42,4 +42,5 @@ select = ["E", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--basetemp=.cache/pytest"
+addopts = "--basetemp=.cache/pytest -m 'not integration'"
+markers = ["integration: requires a local SUMO process and TraCI socket"]

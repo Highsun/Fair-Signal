@@ -1,4 +1,4 @@
-# Planning configuration only. The training/evaluation implementation is a later milestone.
+# Original planning archive, NOT executable. Use pilot.yaml or formal.yaml for the implemented runner.
 project: fair-signal
 scope: single_intersection
 device: cpu

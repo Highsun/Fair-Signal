@@ -11,10 +11,12 @@
 
 ## 当前状态
 
-当前为**项目准备阶段**：包含实验方案、Python 依赖锁定、环境检查和联通测试入口。
-正式车流生成、基线控制器、公平性状态/奖励、训练与统计分析尚未实现。
-环境联通检查的短训练只验证工具链，不构成算法有效性证据。
-实际安装和检查结果见 [环境记录](docs/environment.md)。
+已实现**首版完整实验管线**：原生路网与可复现车流生成、统一信号约束、三种传统控制器、
+三个 DQN 消融、验证选参、固定测试、模型保存/回放、分层统计与绘图。
+已完成 1 万步的小规模试验；30 万步、多训练种子的正式实验尚未执行。
+短跑和环境联通检查都不构成算法收敛或优越性的证据。
+设计细节见 [实现说明](docs/implementation.md)，实际安装见 [环境记录](docs/environment.md)。
+首轮实测与失败分析见 [短跑结果](docs/pilot-results.md)：传统基线暂时领先，不能宣称 DQN 更优。
 
 ## 研究问题
 
@@ -31,7 +33,7 @@
 | 环境 | 一个四进口路口、普通机动车、单智能体 |
 | 输入 | 数值交通状态，不加入视觉识别 |
 | 动作 | 选择预定义合法绿灯相位 |
-| 控制周期 | 初定 5 秒；切换时遵守黄灯及绿灯时长规则 |
+| 控制周期 | 每 5 秒决策；最小绿灯 10 秒，最大 60 秒，黄灯 3 秒，全红 1 秒 |
 | 算法 | CPU 上训练的小型 DQN，经验回放和目标网络 |
 | 改进点 | 等待信息增强、超时等待惩罚、效率与公平性的权衡 |
 | 首版边界 | 不加入多路口、行人、公交优先或真实道路部署 |
@@ -48,7 +50,7 @@
 | 增加等待状态和公平奖励的 DQN | 分离公平目标的作用 |
 
 三类车流：均衡、方向不均衡、时变高峰。训练/验证/测试种子分离，同一测试车流供所有方法使用。
-初定每种学习配置训练 3 个随机种子，每次 30 万决策步，先做短跑再调整预算。
+正式配置为每种学习配置训练 3 个随机种子，每次 30 万决策步，先做短跑再调整预算。
 公平性权重用验证集选择，测试集只作最终评估。
 
 主要指标：车辆平均等待、P95 等待、平均行程时间、平均队列、通行数、未完成/未插入车辆数、
@@ -93,9 +95,22 @@ bash scripts/run.sh fair-signal doctor
 # 执行有限步数的仿真、DQN 更新与模型保存/加载检查
 bash scripts/run.sh fair-signal smoke --steps 128
 
+# 首轮端到端短跑：5 个学习配置各 1 万步，随后验证与固定测试
+bash scripts/run.sh fair-signal run --config configs/pilot.yaml --output outputs/pilot
+
+# 重新生成结果表、质量检查与图表，不重新训练
+bash scripts/run.sh fair-signal analyze --run outputs/pilot
+
+# 加载验证集选出的公平 DQN，回放一条测试车流
+bash scripts/run.sh fair-signal replay --run outputs/pilot --method dqn_fair \
+  --seed 11 --scenario imbalanced --traffic-seed 2001 --output outputs/replay
+
 # 代码检查
 bash scripts/run.sh ruff check .
 bash scripts/run.sh pytest
+
+# 真实 SUMO 集成检查（需要允许本机 TraCI 端口）
+bash scripts/run.sh pytest -m integration
 ```
 
 `scripts/run.sh` 会设置项目缓存目录和 SUMO 路径，不修改全局 shell 配置。
@@ -103,16 +118,36 @@ bash scripts/run.sh pytest
 直接使用 `uv run` 时，应先在 Bash 中 `source scripts/env.sh`。
 
 联通测试会读取 SUMO-RL 自带路网，并在 `outputs/smoke/` 生成临时车流、模型与检查报告。
-这些文件不进入 Git。训练、批量评估和绘图命令将在相应功能完成后补充。
+这些文件不进入 Git。正式实验使用项目原创路网生成器，不依赖该示例路网。
+
+运行结果位于 `outputs/pilot/report.md`；原始测试表为 `test.csv`，模型级均值为
+`per_model_summary.csv`，跨训练种子的统计为 `summary.csv`，图表在 `figures/`。
+模型位于 `models/<方法>/candidate_<编号>/seed_<种子>/model.zip`。
+`selection.json` 记录验证选择；`quality.json` 记录未完成、传送与碰撞检查。
+有不完整回合的方法/场景不输出汇总性能，原始删失结果仍保留。
+
+可分阶段运行 `--stage prepare/train/tune/test`。相同代码和配置下，已完成的训练和评估
+会校验并复用；中断的单个训练从头重跑，不声称支持优化器/回放池断点续训。
+修改代码或配置后必须使用新的输出目录，防止混入旧结果。
+
+长预算实验显式运行以下命令；会产生 15 个 30 万步训练，**不建议直接作为首次运行**：
+
+```bash
+bash scripts/run.sh fair-signal run --config configs/formal.yaml --output outputs/formal
+```
+
+GUI 演示在上面的 `replay` 命令添加 `--gui`，需 XQuartz 会话可用。
+本机目前只验证无界面运行，不将 `sumo-gui --version` 当作动画渲染验证。
+完整执行、产物和部署说明见 [运行指南](docs/running.md)。
 
 ## 仓库结构
 
 ```text
 code/
-├── src/fair_signal/       # Python 包与命令行入口
+├── src/fair_signal/       # 环境、信号状态机、控制器、训练、评估、分析与回放
 ├── scripts/              # 环境设置和运行脚本
-├── configs/              # 实验规划与后续运行配置
-├── data/                 # 场景说明；生成数据不入库
+├── configs/              # pilot.yaml / formal.yaml 及原始规划存档
+├── data/                 # 场景说明；实际生成数据随各实验保存
 ├── tests/                # 关键行为检查
 ├── docs/                 # 实验、环境、安装与清理文档
 ├── outputs/              # 日志、模型和图表（Git 忽略）
@@ -133,8 +168,9 @@ code/
 4. **最终交付**：问题与算法设计、流程图、源码、执行入口、已训练模型、部署说明、
    多种子结果表、效率公平性图、失败案例与 GUI 演示。
 
-本项目的“执行程序”预期为命令行入口与模型加载程序；独立打包的应用程序不在当前首版范围。
-正式结果、复现命令与模型校验值在实验完成后发布到文档中。
+本项目的“执行程序”为 `fair-signal` 命令行入口与模型加载程序，通过 `scripts/run.sh`
+执行；首版不分发独立桌面应用。训练配置、路线/模型校验值和环境来源随每次实验保存。
+后续正式阶段需要更充分的训练、多种子结果和最终课程报告。
 
 ## 开发与贡献
 

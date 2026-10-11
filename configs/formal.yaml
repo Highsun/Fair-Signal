@@ -1,0 +1,11 @@
+# Longer multi-seed experiment, opt in explicitly; never launched by default.
+label: formal-300k
+env:
+  demand_seconds: 3600
+  drain_seconds: 1800
+training_steps: 300000
+training_seeds: [11, 22, 33]
+validation_seeds: [1001, 1002, 1003, 1004, 1005]
+# Pilot test seeds 2001/2002 are now development evidence. Reserve new final seeds.
+test_seeds: [3001, 3002, 3003, 3004, 3005, 3006, 3007, 3008, 3009, 3010]
+fair_weights: [0.1, 0.3, 1.0]

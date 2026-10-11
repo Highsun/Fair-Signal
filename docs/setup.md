@@ -54,9 +54,10 @@ Windows 可用官方便携 ZIP；当前 Bash 启动脚本可在 Git Bash 中使�
 1. `doctor`：Python、CPU 架构、包版本、SUMO 可执行文件及客户端版本。
 2. `smoke`：SUMO-RL 初始化、真实交通仿真、少量 DQN 梯度更新、保存及重载。
 3. GUI：安装并启动 XQuartz 后手动检查 sumo-gui 的窗口与渲染。
-4. 正式实验：实现基线、公平性改进和完整评估后另行运行。
+4. 真实环境集成：`bash scripts/run.sh pytest -m integration`，验证公共约束、删失和回放。
+5. 短跑/正式实验：使用 `configs/pilot.yaml` / `configs/formal.yaml`，见 [运行指南](running.md)。
 
-前三项不代表控制策略已收敛或有实际性能收益。
+环境与集成检查不代表控制策略已收敛或有实际性能收益。
 
 ## 常见问题
 

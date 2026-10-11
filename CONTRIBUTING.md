@@ -10,11 +10,14 @@ bash scripts/run.sh ruff check .
 bash scripts/run.sh pytest
 ```
 
-涉及仿真或依赖变更时，还需运行 `fair-signal doctor` 和 `fair-signal smoke`。
+涉及正式环境或控制器变更时，还需运行 `bash scripts/run.sh pytest -m integration`。
+依赖/SUMO 变更时另运行 `fair-signal doctor` 和 `fair-signal smoke`。
 正式实验注明配置、Git 提交、种子、依赖版本与原始指标文件。
 新控制器使用统一的信号规则和评价口径；奖励改动需要消融。
 引入第三方代码或路网时，保留来源、版本与许可证，更新 THIRD_PARTY_NOTICES。
 README 必须区分已实现功能、计划功能和实测结果。
+实验来源记录代码内容 SHA-256；修改源码/uv.lock/pyproject 后使用新的输出目录。
+不要把失败/删失回合从原始结果中删除，不以已完成车辆均值给未清空策略排名。
 
 Git 仓库仅覆盖 `code/`，远程 `origin` 为 https://github.com/Highsun/Fair-Signal.git。
 完成本地提交后，将相应分支推送到 GitHub；首次推送新分支时设置 upstream。

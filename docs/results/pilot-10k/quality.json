@@ -1,0 +1,9 @@
+{
+  "test_cases": 36,
+  "all_cases_complete": false,
+  "incomplete_cases": 1,
+  "unfinished_vehicles": 1,
+  "pending_insertion": 0,
+  "teleport_events": 0,
+  "collision_events": 0
+}
