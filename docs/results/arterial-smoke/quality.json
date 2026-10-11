@@ -1,0 +1,71 @@
+{
+  "source_sha256": "78cccfecf09b9d0cba81cae7fd7543411e8ab0bd14ec24da52186fe349b519ce",
+  "summary_script_sha256": "bd13939b96944ed9119eb514f024ea1a2e48a969ae48f37f7c43cc2e2d66ebc8",
+  "validation_cases": 21,
+  "tuning_cases": 36,
+  "complete_validation_cases": 21,
+  "complete_tuning_cases": 36,
+  "traces_audited": 57,
+  "physical_intervals_audited": 5134,
+  "running": 0,
+  "pending_insertion": 0,
+  "collision_events": 0,
+  "teleport_events": 0,
+  "test_generated_or_evaluated": false,
+  "route_sha256": {
+    "tuning/steady/901": "82f13ffc9994a8595b96260409054f65d5944dc211f74a9030254428238a245d",
+    "tuning/tidal/901": "5df49cd615d7a2472c9a67a7ab4324e2e89a109f006b847ad0cbeffc52ae25b4",
+    "tuning/downstream_slowdown/901": "46a04d8bc2aa5099afd44858164bbba4a6113d457f659cfbf362854ea441af01",
+    "validation/steady/2001": "34c7afe3a09c756d61628bade382c171ce7d3d7b0876e24803fbe3ce400dcef3",
+    "validation/tidal/2001": "c244909338d427ed5730eef6e894c6da2d5839cae3dc167a7c316bfbeb67bdc1",
+    "validation/downstream_slowdown/2001": "b21a6af2980998e028db7a6aa7a9e1976c5fd378312124de152f1b6d5d5c4ed5"
+  },
+  "tensorboard": [
+    {
+      "method": "local_dqn",
+      "training_seed": 11,
+      "finite_scalars": 6,
+      "tags": [
+        "rollout/exploration_rate",
+        "traffic/fair_cost",
+        "traffic/guard_overrides",
+        "traffic/queue_cost",
+        "train/learning_rate",
+        "train/loss"
+      ]
+    },
+    {
+      "method": "joint_dqn",
+      "training_seed": 11,
+      "finite_scalars": 6,
+      "tags": [
+        "rollout/exploration_rate",
+        "traffic/fair_cost",
+        "traffic/guard_overrides",
+        "traffic/queue_cost",
+        "train/learning_rate",
+        "train/loss"
+      ]
+    },
+    {
+      "method": "fair_joint_dqn",
+      "training_seed": 11,
+      "finite_scalars": 6,
+      "tags": [
+        "rollout/exploration_rate",
+        "traffic/fair_cost",
+        "traffic/guard_overrides",
+        "traffic/queue_cost",
+        "train/learning_rate",
+        "train/loss"
+      ]
+    }
+  ],
+  "inputs": {
+    "study.json": "77911e325016276f59e49eb1b23c461d579404dd52d30d7cd173d2336ab69dd1",
+    "validation.csv": "f6c66d5f58fc8c61d99bd057f927f00a13cb391de85ccbdeaabf18fed1a45449",
+    "tuning.csv": "75d0a555ecc22e744a11082f066330e21928c2a50683a87181c9d9791437f8c3",
+    "selection.json": "083714074b94acd6d4b2ad45dee120fecfda53abc5f6a186750c9db987aa67d5",
+    "training.csv": "ad714b804410d6a4b548b555240518cf5afb6c5e929456a9169ef8e516b50547"
+  }
+}
