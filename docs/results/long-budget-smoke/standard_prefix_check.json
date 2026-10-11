@@ -1,0 +1,38 @@
+[
+  {
+    "method": "dqn_queue",
+    "step": 32,
+    "gradient_updates": 6,
+    "standard_online_target_identical": true
+  },
+  {
+    "method": "dqn_fair",
+    "step": 32,
+    "gradient_updates": 6,
+    "standard_online_target_identical": true
+  },
+  {
+    "method": "dqn_queue",
+    "step": 64,
+    "gradient_updates": 14,
+    "standard_online_target_identical": true
+  },
+  {
+    "method": "dqn_fair",
+    "step": 64,
+    "gradient_updates": 14,
+    "standard_online_target_identical": true
+  },
+  {
+    "method": "dqn_queue",
+    "step": 128,
+    "gradient_updates": 30,
+    "standard_online_target_identical": true
+  },
+  {
+    "method": "dqn_fair",
+    "step": 128,
+    "gradient_updates": 30,
+    "standard_online_target_identical": true
+  }
+]
