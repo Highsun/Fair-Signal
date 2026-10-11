@@ -194,8 +194,9 @@ bash scripts/watch.sh --gui-delay 1000 --method aging
 Delay 可在 GUI 中继续修改。加 `--autoplay` 才会自动开始，加 `--gui-delay 0` 才以最快速度播放。
 结束后窗口关闭；等待初始播放时终端没有继续输出属于正常现象。
 Ctrl+C 会关闭该次演示自己的 GUI 子进程，包括尚未开始的暂停窗口。
-观看脚本在 macOS 中优先使用 DISPLAY 或 launchctl 的显示地址，必要时连接已经存在的
-XQuartz `:0` 本地套接字；不修改全局环境变量或 shell 配置。
+GUI 命令通过 `scripts/run.sh` 在 macOS 中依次检查 DISPLAY、launchctl 的显示地址和
+已有的 XQuartz `:0` 本地套接字，只使用实际可连接的地址。失效的 launchctl 地址会自动跳过；
+必要时自动打开 XQuartz 并等待启动。不修改全局环境变量或 shell 配置。
 每次输出保存到新的 `outputs/gui-1h/<时间戳>/`，可用 `--output` 指定其他项目输出目录。
 
 完整命令及原测试回放入口：
@@ -258,6 +259,12 @@ bash scripts/run.sh python scripts/view_arterial.py --method joint_dqn --scenari
 # 不改变原控制，复现唯一失败回合并导出末端车辆/相位需求诊断
 bash scripts/run.sh python scripts/diagnose_arterial.py
 ```
+
+若出现 `FXApp::openDisplay: unable to open display`，通常是 XQuartz 地址失效。
+新版启动脚本会自动检查并回退到可用地址；直接重跑原命令即可。临时手动排查可运行
+`/opt/X11/bin/xdpyinfo -display :0`，成功后用
+`DISPLAY=:0 bash scripts/run.sh python scripts/view_arterial.py --method local_dqn --delay 200`。
+显示地址检查失败会在启动 SUMO 前给出提示，避免后续无关的 TraCI 连接错误。
 
 模型位于 `outputs/arterial-50k/models/<方法>/seed_<种子>/model.zip`。
 `--stage tune/train/evaluate` 可单独执行阶段；已完成产物只有在代码、配置、路线和模型
