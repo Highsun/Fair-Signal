@@ -17,6 +17,40 @@ from fair_signal.runtime import output_directory
 pytestmark = pytest.mark.integration
 
 
+def test_dense_reward_lifetime_accounting_and_signal_observation(tmp_path):
+    network = build_network(tmp_path / "network")
+    routes = generate_routes(tmp_path / "case", "imbalanced", "validation", 1001, 120)
+    env = TrafficEnv(
+        EnvConfig(demand_seconds=120, drain_seconds=300),
+        network,
+        tmp_path / "dense",
+        enhanced=True,
+        fair_weight=0.3,
+        reward_mode="vehicle_quadratic",
+        observation_mode="service",
+        route_file=routes,
+        sumo_seed=1001,
+    )
+    integral = 0.0
+    try:
+        observation, _ = env.reset(seed=11)
+        assert observation.shape == (44,)
+        while True:
+            before = env.time
+            observation, reward, terminated, truncated, info = env.step(0)
+            integral += info["wait_cost"] * (env.time - before)
+            assert reward == pytest.approx(-info["queue_cost"] - 0.3 * info["wait_cost"])
+            assert env.observation_space.contains(observation)
+            if terminated or truncated:
+                break
+        expected = sum(w**2 for w in env.total_waits.values()) / (2 * 90 * 80)
+        assert integral == pytest.approx(expected)
+        for trip in ET.parse(env.trip_file).getroot().findall("tripinfo"):
+            assert env.total_waits.get(trip.get("id"), 0) == float(trip.get("waitingTime"))
+    finally:
+        env.close()
+
+
 def test_environment_reproducibility_and_accounting(tmp_path):
     network = build_network(tmp_path / "network")
     routes = generate_routes(tmp_path / "case", "imbalanced", "test", 2001, 120)

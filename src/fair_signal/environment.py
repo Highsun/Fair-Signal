@@ -17,6 +17,7 @@ from sumolib.miscutils import getFreeSocketPort
 
 from fair_signal.config import SCENARIOS, EnvConfig
 from fair_signal.demand import DIRECTIONS, LANES, PHASE_LANES, generate_routes, save_json
+from fair_signal.objectives import quadratic_wait_increment
 from fair_signal.runtime import configure_sumo
 from fair_signal.signals import Signal
 
@@ -107,19 +108,31 @@ class TrafficEnv(gym.Env):
         trace: bool = False,
         gui_delay: int = 200,
         start_paused: bool = True,
+        reward_mode: str = "head_threshold",
+        observation_mode: str = "legacy",
     ):
         super().__init__()
         config.validate()
         configure_sumo()
         self.config, self.network, self.output = config, network, output
         self.enhanced, self.fair_weight = enhanced, fair_weight
+        if reward_mode not in ("head_threshold", "vehicle_quadratic"):
+            raise ValueError("Unknown reward mode")
+        if observation_mode not in ("legacy", "service") or (
+            observation_mode == "service" and not enhanced
+        ):
+            raise ValueError("Service observation requires enhanced state")
+        self.reward_mode, self.observation_mode = reward_mode, observation_mode
         self.route_file, self.scenario = route_file, scenario
         self.sumo_seed, self.gui, self.trace = sumo_seed, gui, trace
         self.gui_delay, self.start_paused = gui_delay, start_paused
         gui_arguments(gui_delay, start_paused)
         self.action_space = gym.spaces.Discrete(4)
         self.observation_space = gym.spaces.Box(
-            0.0, 1.0, shape=(38 if enhanced else 22,), dtype=np.float32
+            0.0,
+            1.0,
+            shape=(44 if observation_mode == "service" else (38 if enhanced else 22),),
+            dtype=np.float32,
         )
         self.connection = None
         self.gui_process: subprocess.Popen | None = None
@@ -129,6 +142,8 @@ class TrafficEnv(gym.Env):
         self.queues = np.zeros(8)
         self.counts = np.zeros(8)
         self.head_waits = np.zeros(8)
+        self.max_waits = np.zeros(8)
+        self.stopped_waits: list[float] = []
         self.request_ages = np.zeros(8)
 
     def reset(self, *, seed=None, options=None):
@@ -213,6 +228,7 @@ class TrafficEnv(gym.Env):
         self.arrived_in_window = 0
         self.queues, self.counts = np.zeros(8), np.zeros(8)
         self.head_waits, self.request_ages = np.zeros(8), np.zeros(8)
+        self.max_waits, self.stopped_waits = np.zeros(8), []
         self.total_waits: dict[str, float] = {}
         self.active: set[str] = set()
         self.trace_rows: list[dict] = []
@@ -237,6 +253,11 @@ class TrafficEnv(gym.Env):
             self.total_waits[vehicle] = self.total_waits.get(vehicle, 0.0) + (
                 values[tc.VAR_SPEED] <= 0.1
             )
+        self.stopped_waits = [
+            self.total_waits[vehicle]
+            for vehicle, values in vehicle_data.items()
+            if values[tc.VAR_SPEED] <= 0.1
+        ]
         lane_data = conn.lane.getAllSubscriptionResults()
         for i, lane in enumerate(LANES):
             data = lane_data[lane]
@@ -249,6 +270,7 @@ class TrafficEnv(gym.Env):
             ]
             head = max(stopped, key=lambda v: vehicle_data[v][tc.VAR_LANEPOSITION], default=None)
             self.head_waits[i] = self.total_waits[head] if head is not None else 0.0
+            self.max_waits[i] = max((self.total_waits[v] for v in stopped), default=0.0)
             self.request_ages[i] = (
                 self.request_ages[i] + 1 if self.counts[i] > 0 and i not in served else 0
             )
@@ -262,6 +284,25 @@ class TrafficEnv(gym.Env):
             self.drain_samples += 1
 
     def _observation(self) -> np.ndarray:
+        if self.observation_mode == "service":
+            # Preserve current phase, pending target and clearance stage separately.
+            mode = ("green", "yellow", "all_red").index(self.signal.mode)
+            return np.clip(
+                np.concatenate(
+                    (
+                        np.eye(4)[self.signal.phase],
+                        np.eye(4)[self.signal.target],
+                        np.eye(3)[mode],
+                        [self.signal.elapsed / self.config.max_green],
+                        self.counts / self.capacity,
+                        self.queues / self.capacity,
+                        self.max_waits / (self.max_waits + self.config.wait_scale),
+                        self.request_ages / (self.request_ages + self.config.wait_scale),
+                    )
+                ),
+                0,
+                1,
+            ).astype(np.float32)
         # During clearance, phase is the old phase; target and mode expose the transition.
         phase = np.eye(4)[self.signal.target if self.signal.mode != "green" else self.signal.phase]
         base = np.concatenate(
@@ -302,6 +343,10 @@ class TrafficEnv(gym.Env):
                 np.maximum(self.head_waits - self.config.wait_threshold, 0).sum()
                 / (8 * self.config.wait_scale)
             )
+            if self.reward_mode == "vehicle_quadratic":
+                wait_cost = quadratic_wait_increment(
+                    self.stopped_waits, self.config.wait_threshold, self.config.queue_scale
+                )
             queue_costs.append(queue_cost)
             wait_costs.append(wait_cost)
             rewards.append(-queue_cost - self.fair_weight * wait_cost)
@@ -317,6 +362,11 @@ class TrafficEnv(gym.Env):
                         "head_wait_max": float(self.head_waits.max()),
                         "request_age_max": float(self.request_ages.max()),
                         "requested_action": int(action),
+                        "queue_cost": queue_cost,
+                        "fair_cost": wait_cost,
+                        "weighted_fair_cost": self.fair_weight * wait_cost,
+                        "lane_max_wait": float(self.max_waits.max()),
+                        "head_blind_spot": float((self.max_waits - self.head_waits).max()),
                     }
                 )
             self.signal.after_second()

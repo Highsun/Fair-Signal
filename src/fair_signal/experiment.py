@@ -17,6 +17,7 @@ from fair_signal.config import ExperimentConfig, load_config
 from fair_signal.controllers import TraditionalController
 from fair_signal.demand import build_network, generate_routes, save_json, sha256
 from fair_signal.environment import TrafficEnv, write_rows
+from fair_signal.objectives import policy_options
 from fair_signal.runtime import output_directory, project_root
 
 
@@ -100,6 +101,8 @@ def candidates(config: ExperimentConfig, method: str) -> list[dict]:
         ]
     if method == "dqn_fair":
         return [{"fair_weight": value} for value in config.fair_weights]
+    if method in ("dqn_dense", "dqn_dense_state"):
+        return [{"fair_weight": config.dense_fair_weight}]
     return [{"fair_weight": 0.0}]
 
 
@@ -116,11 +119,13 @@ def train(config: ExperimentConfig, output: Path, network: Path) -> None:
     torch.set_num_threads(1)
 
     class EpisodeLog(BaseCallback):
-        def __init__(self, target: Path):
+        def __init__(self, target: Path, fair_weight: float):
             super().__init__()
             self.target = target
             self.rewards: list[float] = []
             self.rows: list[dict] = []
+            self.fair_weight = fair_weight
+            self.costs: list[tuple[float, float]] = []
 
         def _on_step(self) -> bool:
             if not np.isfinite(self.locals["new_obs"]).all():
@@ -128,12 +133,32 @@ def train(config: ExperimentConfig, output: Path, network: Path) -> None:
             if not np.isfinite(self.locals["rewards"]).all():
                 raise RuntimeError("Nonfinite reward")
             self.rewards.append(float(self.locals["rewards"][0]))
+            info = self.locals["infos"][0]
+            self.costs.append((info["queue_cost"], info["wait_cost"]))
             metrics = self.locals["infos"][0].get("metrics")
             if metrics is not None:
+                costs = np.asarray(self.costs)
+                diagnostic = {
+                    "mean_queue_cost": float(costs[:, 0].mean()),
+                    "mean_fair_cost": float(costs[:, 1].mean()),
+                    "mean_weighted_fair_cost": float(self.fair_weight * costs[:, 1].mean()),
+                    "fair_cost_active_fraction": float((costs[:, 1] > 0).mean()),
+                }
                 self.rows.append(
-                    {"step": self.num_timesteps, "episode_reward": sum(self.rewards), **metrics}
+                    {
+                        "step": self.num_timesteps,
+                        "episode_reward": sum(self.rewards),
+                        **diagnostic,
+                        **metrics,
+                    }
                 )
+                for key, value in diagnostic.items():
+                    self.logger.record(f"traffic/{key}", value)
+                self.logger.record("traffic/mean_wait", metrics["mean_wait"])
+                self.logger.record("traffic/p95_wait", metrics["p95_wait"])
+                self.logger.record("traffic/valid_complete", int(metrics["valid_complete"]))
                 self.rewards.clear()
+                self.costs.clear()
                 write_rows(self.target, self.rows)
                 if len(self.rows) % 5 == 0:
                     print(
@@ -165,8 +190,7 @@ def train(config: ExperimentConfig, output: Path, network: Path) -> None:
                         config.env,
                         network,
                         path.parent / "episodes",
-                        enhanced=method != "dqn_queue",
-                        fair_weight=params["fair_weight"],
+                        **policy_options(method, params),
                     ),
                     filename=str(path.parent / "monitor.csv"),
                 )
@@ -192,7 +216,7 @@ def train(config: ExperimentConfig, output: Path, network: Path) -> None:
                         tensorboard_log=str(path.parent / "tensorboard"),
                     )
                     before = [p.detach().clone() for p in model.q_net.parameters()]
-                    callback = EpisodeLog(path.parent / "learning.csv")
+                    callback = EpisodeLog(path.parent / "learning.csv", params["fair_weight"])
                     model.learn(config.training_steps, callback=callback)
                     elapsed = time.perf_counter() - started
                     if model._n_updates == 0 or not any(
@@ -223,6 +247,7 @@ def train(config: ExperimentConfig, output: Path, network: Path) -> None:
                             "source_sha256": source_digest(),
                             "save_reload_action_matches": True,
                             "network_parameters": sum(p.numel() for p in model.q_net.parameters()),
+                            "policy_options": policy_options(method, params),
                         },
                     )
                     print(
@@ -286,8 +311,7 @@ def evaluate_case(
             config.env,
             network,
             destination,
-            enhanced=method != "dqn_queue",
-            fair_weight=params.get("fair_weight", 0.0),
+            **policy_options(method, params),
             route_file=route,
             sumo_seed=traffic_seed,
             trace=True,

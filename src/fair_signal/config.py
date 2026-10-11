@@ -7,7 +7,16 @@ from pathlib import Path
 
 import yaml
 
-METHODS = ("fixed", "actuated", "aging", "dqn_queue", "dqn_wait", "dqn_fair")
+METHODS = (
+    "fixed",
+    "actuated",
+    "aging",
+    "dqn_queue",
+    "dqn_wait",
+    "dqn_fair",
+    "dqn_dense",
+    "dqn_dense_state",
+)
 SCENARIOS = ("balanced", "imbalanced", "changing_peak")
 
 
@@ -54,8 +63,9 @@ class ExperimentConfig:
     validation_seeds: list[int] = field(default_factory=lambda: [1001, 1002])
     test_seeds: list[int] = field(default_factory=lambda: [2001, 2002, 2003])
     scenarios: list[str] = field(default_factory=lambda: list(SCENARIOS))
-    methods: list[str] = field(default_factory=lambda: list(METHODS))
+    methods: list[str] = field(default_factory=lambda: list(METHODS[:6]))
     fair_weights: list[float] = field(default_factory=lambda: [0.1, 0.3, 1.0])
+    dense_fair_weight: float = 0.3
     hidden: list[int] = field(default_factory=lambda: [128, 128])
     learning_starts: int = 1000
     buffer_size: int = 50000
@@ -103,6 +113,8 @@ class ExperimentConfig:
             raise ValueError("Invalid learning rate or replay size")
         if not self.fair_weights or min(self.fair_weights) < 0:
             raise ValueError("fair_weights must be nonnegative")
+        if not 0 <= self.dense_fair_weight < float("inf"):
+            raise ValueError("dense_fair_weight must be finite and nonnegative")
         if not self.fixed_candidates or any(
             len(row) != 4 or min(row) < self.env.min_green or max(row) > self.env.max_green
             for row in self.fixed_candidates

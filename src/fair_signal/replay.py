@@ -9,6 +9,7 @@ from fair_signal.controllers import TraditionalController
 from fair_signal.demand import generate_routes, save_json, sha256
 from fair_signal.environment import TrafficEnv
 from fair_signal.experiment import case_path, model_path, source_digest
+from fair_signal.objectives import policy_options
 from fair_signal.runtime import project_root
 
 
@@ -82,8 +83,7 @@ def replay(
         config.env,
         network,
         destination,
-        enhanced=method != "dqn_queue",
-        fair_weight=params.get("fair_weight", 0.0),
+        **policy_options(method, params),
         route_file=route,
         sumo_seed=traffic_seed,
         gui=gui,

@@ -193,7 +193,7 @@ def export(run: Path, destination: Path) -> dict:
             / str(row.traffic_seed)
             / "episode_00000/trace.csv"
         )
-        trace = pd.read_csv(trace_path, usecols=["second", "head_wait_max", "queue"])
+        trace = pd.read_csv(trace_path)
         trace = trace[trace.second <= config.env.demand_seconds]
         if len(trace) != config.env.demand_seconds:
             raise ValueError("Missing demand-window trace seconds")
@@ -205,7 +205,9 @@ def export(run: Path, destination: Path) -> dict:
                 "scenario": row.scenario,
                 "traffic_seed": row.traffic_seed,
                 "fair_penalty_active_fraction": float(
-                    (trace.head_wait_max > config.env.wait_threshold).mean()
+                    (trace.fair_cost > 0).mean()
+                    if "fair_cost" in trace
+                    else (trace.head_wait_max > config.env.wait_threshold).mean()
                 ),
                 "head_wait_above_observation_scale_fraction": float(
                     (trace.head_wait_max > config.env.wait_scale).mean()
