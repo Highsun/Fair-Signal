@@ -154,8 +154,10 @@ def export(run: Path, destination: Path) -> dict:
 
     paired = []
     keys = ["scenario", "traffic_seed"]
-    if len(config.training_seeds) == 1:
+    if len(config.training_seeds) == 1 and "dqn_fair" in selected:
         for reference in ("dqn_queue", "dqn_wait", "aging"):
+            if reference not in selected:
+                continue
             a = frame[
                 (frame.method == "dqn_fair")
                 & (frame.candidate == selected["dqn_fair"]["candidate"])

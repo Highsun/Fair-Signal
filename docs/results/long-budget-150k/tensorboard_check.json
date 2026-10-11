@@ -1,0 +1,44 @@
+[
+  {
+    "trajectory": "trajectories/dqn_fair/seed_11/tensorboard/DQN_1",
+    "loss_samples": 50,
+    "last_logged_step": 149007,
+    "required_tags_present": true,
+    "scalars_finite": true
+  },
+  {
+    "trajectory": "trajectories/dqn_fair/seed_22/tensorboard/DQN_1",
+    "loss_samples": 50,
+    "last_logged_step": 148876,
+    "required_tags_present": true,
+    "scalars_finite": true
+  },
+  {
+    "trajectory": "trajectories/dqn_fair/seed_33/tensorboard/DQN_1",
+    "loss_samples": 50,
+    "last_logged_step": 148606,
+    "required_tags_present": true,
+    "scalars_finite": true
+  },
+  {
+    "trajectory": "trajectories/dqn_queue/seed_11/tensorboard/DQN_1",
+    "loss_samples": 49,
+    "last_logged_step": 147071,
+    "required_tags_present": true,
+    "scalars_finite": true
+  },
+  {
+    "trajectory": "trajectories/dqn_queue/seed_22/tensorboard/DQN_1",
+    "loss_samples": 50,
+    "last_logged_step": 149818,
+    "required_tags_present": true,
+    "scalars_finite": true
+  },
+  {
+    "trajectory": "trajectories/dqn_queue/seed_33/tensorboard/DQN_1",
+    "loss_samples": 49,
+    "last_logged_step": 147853,
+    "required_tags_present": true,
+    "scalars_finite": true
+  }
+]

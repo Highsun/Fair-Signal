@@ -1,0 +1,20 @@
+[
+  {
+    "method": "dqn_queue",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 0.0
+    },
+    "validation_score": 43.059629974989534,
+    "all_cases_complete": true
+  },
+  {
+    "method": "dqn_fair",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 1.0
+    },
+    "validation_score": 42.510423797402844,
+    "all_cases_complete": true
+  }
+]

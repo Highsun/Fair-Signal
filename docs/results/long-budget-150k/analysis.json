@@ -1,0 +1,16 @@
+{
+  "summarizer_sha256": "a523c90336b2bb70a17a5e2a0918765edb8993736781ed54a6f7294bfe067613",
+  "core_source_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+  "study_runner_sha256": "7eafcb926cf0bf756deea477bf212ef983d75e57469f68d07982254a206012c9",
+  "historical_validation_sha256": "aa068e9da404cb59d544b60dadf874738f793e17e2d55350229eab5975e174c9",
+  "raw_checkpoint_validation_sha256": {
+    "50000": "1eedfbb3308d562653c6a409708ca2e04c2207e184d7bd61dc5a411ea51b4683",
+    "100000": "fa5b926e2eeeabe55e47a5509415dbb9d8845e33b86e4496761e736b559828ba",
+    "150000": "261346f1a4b89567d217449885bc7fd0275efbff8f857a437f5415101aec3ec7"
+  },
+  "independent_training_trajectories": 6,
+  "saved_snapshots": 18,
+  "training_decision_steps": 900000,
+  "validation_cases": 300,
+  "test_evaluated": false
+}

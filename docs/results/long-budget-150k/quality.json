@@ -1,0 +1,41 @@
+[
+  {
+    "checkpoint": 50000,
+    "purpose": "development_validation_only",
+    "trained_models": 6,
+    "validation_cases": 90,
+    "complete_cases": 90,
+    "unfinished_vehicles": 0,
+    "pending_insertion": 0,
+    "collision_events": 0,
+    "teleport_events": 0,
+    "test_performance_evaluated": false,
+    "training_seconds": 1091.4380768749943
+  },
+  {
+    "checkpoint": 100000,
+    "purpose": "development_validation_only",
+    "trained_models": 6,
+    "validation_cases": 90,
+    "complete_cases": 88,
+    "unfinished_vehicles": 2,
+    "pending_insertion": 0,
+    "collision_events": 0,
+    "teleport_events": 0,
+    "test_performance_evaluated": false,
+    "training_seconds": 2172.732550665998
+  },
+  {
+    "checkpoint": 150000,
+    "purpose": "development_validation_only",
+    "trained_models": 6,
+    "validation_cases": 120,
+    "complete_cases": 102,
+    "unfinished_vehicles": 28,
+    "pending_insertion": 0,
+    "collision_events": 0,
+    "teleport_events": 0,
+    "test_performance_evaluated": false,
+    "training_seconds": 3230.763329499998
+  }
+]

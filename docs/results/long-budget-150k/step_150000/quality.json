@@ -1,0 +1,12 @@
+{
+  "purpose": "development_validation_only",
+  "trained_models": 6,
+  "validation_cases": 120,
+  "complete_cases": 102,
+  "unfinished_vehicles": 28,
+  "pending_insertion": 0,
+  "collision_events": 0,
+  "teleport_events": 0,
+  "test_performance_evaluated": false,
+  "training_seconds": 3230.763329499998
+}

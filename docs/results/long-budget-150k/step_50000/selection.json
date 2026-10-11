@@ -1,0 +1,18 @@
+{
+  "dqn_queue": {
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 0.0
+    },
+    "validation_eligible": true,
+    "diagnostic_only": false
+  },
+  "dqn_fair": {
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 1.0
+    },
+    "validation_eligible": true,
+    "diagnostic_only": false
+  }
+}

@@ -107,6 +107,25 @@ bash scripts/watch.sh --run outputs/improvement-50k --method dqn_dense_state --s
 新轨迹的 fair_cost 为当前方法的实际公平成本定义；`reward_activation.csv` 优先使用此列。
 历史轨迹缺少该列时，才以队首超阈值判断原成本是否非零。
 
+## 固定探索日程的长预算验证
+
+```bash
+# 两种 DQN，各三个种子；六条不中断的 15 万步轨迹
+bash scripts/run.sh python scripts/long_budget_study.py --workers 3
+# 核查三组检查点、前缀一致性并导出结果
+bash scripts/run.sh python scripts/summarize_long_budget.py
+bash scripts/run.sh tensorboard --logdir outputs/long-budget-150k/trajectories --host 127.0.0.1
+```
+
+`configs/long-budget.yaml` 固定前 25000 步探索衰减、原公平权重 1.0，
+保存 50000/100000/150000 步梯度更新后的模型，完成整条轨迹后才评估。
+模型在 `outputs/long-budget-150k/step_<步数>/models/`，
+完整训练日志和 TensorBoard 在 `trajectories/`；18 个检查点来自六条独立轨迹。
+不按最好检查点选模型，主要报告 150000 步末端。
+实验脚本本身也有 SHA-256 身份校验；不要改已有运行目录后继续训练。
+新验证共 300 回合，预留最终测试不生成、不运行。
+实验设计与实际结果见 [长预算记录](long-budget-results.md)。
+
 ## 产物
 
 ```text

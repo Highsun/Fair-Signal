@@ -1,0 +1,41 @@
+[
+  {
+    "method": "actuated",
+    "candidate": 0,
+    "parameters": {
+      "minimum": 10,
+      "hysteresis": 1.0
+    },
+    "validation_score": 37.24398177322574,
+    "all_cases_complete": true
+  },
+  {
+    "method": "aging",
+    "candidate": 0,
+    "parameters": {
+      "minimum": 10,
+      "hysteresis": 1.0,
+      "aging_weight": 0.1
+    },
+    "validation_score": 36.02875003418151,
+    "all_cases_complete": true
+  },
+  {
+    "method": "dqn_queue",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 0.0
+    },
+    "validation_score": null,
+    "all_cases_complete": false
+  },
+  {
+    "method": "dqn_fair",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 1.0
+    },
+    "validation_score": null,
+    "all_cases_complete": false
+  }
+]

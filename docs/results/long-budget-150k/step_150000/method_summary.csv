@@ -1,0 +1,5 @@
+method,candidate,parameters,valid_cases,cases,all_cases_complete,mean_wait,p95_wait,over_threshold_fraction,mean_queue,mean_depart_delay
+actuated,0,"{""hysteresis"": 1.0, ""minimum"": 10}",15,15,True,13.750648439892421,46.98666666666664,0.011954135184362199,4.349666666666667,0.5368217056113921
+aging,0,"{""aging_weight"": 0.1, ""hysteresis"": 1.0, ""minimum"": 10}",15,15,True,15.407083367514856,41.243333333333325,0.0,4.861907407407408,0.5371169470051133
+dqn_fair,0,"{""fair_weight"": 1.0}",38,45,False,,,,,
+dqn_queue,0,"{""fair_weight"": 0.0}",34,45,False,,,,,

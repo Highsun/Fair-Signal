@@ -1,0 +1,8 @@
+{
+  "wall_seconds": 1311.4425484579988,
+  "training_seconds": 3230.763329499998,
+  "independent_trajectories": 6,
+  "saved_snapshots": 18,
+  "workers": 3,
+  "test_evaluated": false
+}

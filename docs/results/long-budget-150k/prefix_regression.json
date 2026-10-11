@@ -1,0 +1,52 @@
+{
+  "models": [
+    {
+      "method": "dqn_queue",
+      "training_seed": 11,
+      "online_target_identical": true,
+      "old_model_sha256": "ac24e9e3bcbbe48882bac291c4f628942ef5eabf6e1e85b9df0172a3554e7d33",
+      "new_model_sha256": "2f9ac977861ac4acd94587cf9cf2b00abbfcbce4d9066abe6381f64c38cf308d"
+    },
+    {
+      "method": "dqn_queue",
+      "training_seed": 22,
+      "online_target_identical": true,
+      "old_model_sha256": "5661394916d925768b855a6d7be0ef65f9b99c60cae31a5c2f86b48122ac516f",
+      "new_model_sha256": "648b9b25a55bfac9f622f3db5973e8ab40141744283398b90d88dd9cf3790da8"
+    },
+    {
+      "method": "dqn_queue",
+      "training_seed": 33,
+      "online_target_identical": true,
+      "old_model_sha256": "2ba74f83e1eee6014b464a0935a3a36c5a9e71087b10d65a0d78eec76bf3f859",
+      "new_model_sha256": "f0619fdec86bbcaffbb95913a303990df1b5e8ce87a103ff22fc20ba241d6835"
+    },
+    {
+      "method": "dqn_fair",
+      "training_seed": 11,
+      "online_target_identical": true,
+      "old_model_sha256": "c6148927d8652431f34c86fed2985bc066c1179e1107826ddc727c121d9a7a11",
+      "new_model_sha256": "b86f4f620f18eef6237c33a704f542d40a313d93225944c1e823d144051f53eb"
+    },
+    {
+      "method": "dqn_fair",
+      "training_seed": 22,
+      "online_target_identical": true,
+      "old_model_sha256": "43dcd3a85837198b9ee75e399476c3d5dd1543e3a876130bed415760937847c2",
+      "new_model_sha256": "afe1626948c3662fe3ecd529982adbf8f0fdbe81d37b91f702f5a5ce92b0d3a0"
+    },
+    {
+      "method": "dqn_fair",
+      "training_seed": 33,
+      "online_target_identical": true,
+      "old_model_sha256": "c1380c3ee2135a037990cc31187fd76d193f60b5207594b0e08f0dc9c169f7b1",
+      "new_model_sha256": "33d7e1b14c6e18da51d44bdf9ea2b929666f870dbe61689c218e753b136bb357"
+    }
+  ],
+  "identical_validation_cases": 90,
+  "identical_baseline_cases": 30,
+  "old_validation_sha256": "aa068e9da404cb59d544b60dadf874738f793e17e2d55350229eab5975e174c9",
+  "old_source_sha256": "66ef1163dde41f95001dcb877ca39e6a9a606fa283998db441d723f55b227617",
+  "new_source_sha256": "188b3163aa930c5caab0b8b487cf2079a87e39ac435c72a97b1ee461ef3a4378",
+  "all_metrics_identical": true
+}
