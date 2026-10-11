@@ -1,0 +1,32 @@
+# Local environments, runtimes and caches
+.venv/
+.runtime/
+.cache/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+# Experiments and generated traffic
+outputs/*
+!outputs/.gitkeep
+data/generated/
+*.pt
+*.pth
+*.zip
+*.pkg
+*.dmg
+
+# Local machine configuration and secrets
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json

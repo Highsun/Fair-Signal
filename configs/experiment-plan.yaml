@@ -1,0 +1,25 @@
+# Planning configuration only. The training/evaluation implementation is a later milestone.
+project: fair-signal
+scope: single_intersection
+device: cpu
+decision_seconds: 5
+demand_seconds: 3600
+drain_timeout_seconds: 1800
+network_hidden_sizes: [128, 128]
+training_steps: 300000
+training_seeds: [11, 22, 33]
+validation_seeds: [1001, 1002, 1003, 1004, 1005]
+test_seeds: [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010]
+scenarios: [balanced, directional_imbalance, changing_peak]
+methods:
+  - fixed_time_tuned
+  - actuated
+  - actuated_with_aging
+  - dqn_queue
+  - dqn_wait_observation
+  - dqn_fair_reward
+fairness:
+  wait_threshold_seconds: 90
+  lambda_candidates: [0.0, 0.1, 0.3, 1.0]
+  threshold_is_design_parameter_not_service_guarantee: true
+optional_extensions: [observation_noise, short_history]
