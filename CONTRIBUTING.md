@@ -16,4 +16,8 @@ bash scripts/run.sh pytest
 引入第三方代码或路网时，保留来源、版本与许可证，更新 THIRD_PARTY_NOTICES。
 README 必须区分已实现功能、计划功能和实测结果。
 
-当前仅为本地仓库；外部协作和远程 CI 流程尚未启用。
+Git 仓库仅覆盖 `code/`，远程 `origin` 为 https://github.com/Highsun/Fair-Signal.git。
+完成本地提交后，将相应分支推送到 GitHub；首次推送新分支时设置 upstream。
+推送前检查暂存文件及差异，不提交环境、缓存、安装包、密钥或实验大文件。
+如远程分支已有更新，先获取并检查差异，保留双方提交，不默认强制推送。
+远程 CI 尚未启用；本地检查仍需执行。

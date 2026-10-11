@@ -5,7 +5,8 @@
 面向深度强化学习课程的可复现实验项目。使用 SUMO 仿真一个十字路口，研究在
 方向不均衡、车流随时间变化时，DQN 能否减少整体排队，同时改善少数车辆的长时间等待。
 
-本仓库独立位于 `code/`，仅使用本地 Git，目前没有远程仓库。
+本仓库独立位于 `code/`，同步至 [Highsun/Fair-Signal](https://github.com/Highsun/Fair-Signal)。
+后续完成本地提交后，将相应分支同步到 GitHub。
 本项目原创代码采用 [MIT License](LICENSE)，依赖与第三方资料保留各自许可证。
 
 ## 当前状态

@@ -30,4 +30,5 @@ XQuartz 涉及 `/opt/X11`、应用目录、LaunchAgents/LaunchDaemons、路径�
 ## Git 与完整移除
 
 Git 根目录只在 `code/.git/`。删除本仓库不会影响父目录其他课程资料。
-无需清理 GitHub：本项目未添加远程，也未推送或发布。
+GitHub 远程为 https://github.com/Highsun/Fair-Signal；删除本地项目不会删除远程仓库或提交历史。
+本机运行环境、缓存和实验大文件被 Git 忽略，不随源码推送到 GitHub。

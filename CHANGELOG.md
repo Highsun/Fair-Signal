@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- 配置 Highsun/Fair-Signal 为 GitHub 远程，约定后续本地提交同步推送。
+- 更新仓库说明、贡献流程及本地清理与远程保留的区别。
+
 ## 0.1.0 — 2026-10-11
 
 - 建立 code/ 独立本地仓库与 MIT 许可证。
