@@ -30,6 +30,12 @@ from fair_signal.signals import Signal
 LOCAL_DIM = 76
 
 
+def waiting_increment(values) -> int:
+    # A newly inserted car may already have speed < 0.1 but has spent no waiting
+    # second yet. SUMO's consecutive waiting clock preserves this distinction.
+    return int(values[tc.VAR_WAITING_TIME] > 0)
+
+
 def decode_action(action: int) -> tuple[int, int]:
     if not 0 <= action < 16:
         raise ValueError("Joint action must be in [0, 15]")
@@ -200,12 +206,13 @@ class ArterialEnv(TrafficEnv):
         self.teleports += conn.simulation.getStartingTeleportNumber()
         self.collisions += conn.simulation.getCollidingVehiclesNumber()
         for v in new:
-            conn.vehicle.subscribe(v, (tc.VAR_SPEED, tc.VAR_LANEPOSITION))
+            conn.vehicle.subscribe(v, (tc.VAR_SPEED, tc.VAR_LANEPOSITION, tc.VAR_WAITING_TIME))
         vehicle_data = conn.vehicle.getAllSubscriptionResults()
         stopped = []
         for v, data in vehicle_data.items():
-            self.total_waits[v] = self.total_waits.get(v, 0) + (data[tc.VAR_SPEED] <= 0.1)
-            if data[tc.VAR_SPEED] <= 0.1:
+            increment = waiting_increment(data)
+            self.total_waits[v] = self.total_waits.get(v, 0) + increment
+            if increment:
                 stopped.append(self.total_waits[v])
         lane_data = conn.lane.getAllSubscriptionResults()
         for j in JUNCTIONS:
@@ -221,7 +228,7 @@ class ArterialEnv(TrafficEnv):
                     values = vehicle_data[v]
                     section = min(int(values[tc.VAR_LANEPOSITION] * 3 / self.lengths[lane]), 2)
                     self.segments[j][i, section] += 1
-                    if values[tc.VAR_SPEED] <= 0.1:
+                    if waiting_increment(values):
                         waits.append(self.total_waits[v])
                 self.max_waits[j][i] = max(waits, default=0)
                 self.ages[j][i] = (
@@ -386,7 +393,11 @@ class ArterialEnv(TrafficEnv):
                 }
             )
             if row["waitingTime"] != self.total_waits.get(vehicle, 0):
-                raise RuntimeError("Online lifetime stop time differs from SUMO TripInfo")
+                raise RuntimeError(
+                    f"Lifetime stop mismatch for {vehicle}: "
+                    f"online={self.total_waits.get(vehicle, 0)}, "
+                    f"SUMO={row['waitingTime']}"
+                )
             rows.append(row)
         complete = [r for r in rows if r["completed"]]
         waits = [r["waitingTime"] for r in complete]

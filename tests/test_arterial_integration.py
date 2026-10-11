@@ -62,3 +62,26 @@ def test_two_junction_physics_rewards_and_lifetime_accounting(tmp_path):
         assert results[0][1] == results[1][1]
     finally:
         env.close()
+
+
+def test_full_load_low_speed_departure_regression(tmp_path):
+    config = EnvConfig(demand_seconds=1800, drain_seconds=900, queue_scale=160)
+    network = build_network(tmp_path / "network")
+    route = generate_routes(tmp_path / "case", "tidal", "tuning", 902, 1800)
+    env = ArterialEnv(
+        config, network, tmp_path / "run", route_file=route, scenario="tidal", sumo_seed=902
+    )
+    controller = ArterialController(
+        "coordinated_fixed", {"durations": [20, 10, 35, 10], "offset": 0}
+    )
+    try:
+        env.reset(seed=902)
+        while True:
+            _, _, terminated, truncated, info = env.step(controller.predict(env))
+            if terminated or truncated:
+                break
+        assert info["metrics"]["valid_complete"]
+        # This car was inserted at 0.04 m/s; its insertion state is not one spent waiting second.
+        assert env.total_waits["e_000583"] == 128
+    finally:
+        env.close()

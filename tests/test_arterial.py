@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 import numpy as np
 import pytest
 import torch
+import traci.constants as tc
 from gymnasium import spaces
 
 from fair_signal.arterial.demand import (
@@ -14,7 +15,13 @@ from fair_signal.arterial.demand import (
     generate_routes,
     route_edges,
 )
-from fair_signal.arterial.environment import LOCAL_DIM, decode_action, encode_action, service_action
+from fair_signal.arterial.environment import (
+    LOCAL_DIM,
+    decode_action,
+    encode_action,
+    service_action,
+    waiting_increment,
+)
 from fair_signal.arterial.policies import LocalDQNPolicy
 from fair_signal.arterial.validation import audit_signal_rows
 from fair_signal.config import EnvConfig
@@ -60,6 +67,11 @@ def test_joint_actions_and_shared_guard():
     assert service_action(signal, counts, ages, 0, 180) == 2
     counts[4] = 0
     assert service_action(signal, counts, ages, 0, 180) == 0
+
+
+def test_new_slow_departure_is_not_a_completed_waiting_second():
+    assert waiting_increment({tc.VAR_SPEED: 0.04, tc.VAR_WAITING_TIME: 0}) == 0
+    assert waiting_increment({tc.VAR_SPEED: 0.04, tc.VAR_WAITING_TIME: 1}) == 1
 
 
 def test_local_q_actions_cannot_read_the_neighbor_state():

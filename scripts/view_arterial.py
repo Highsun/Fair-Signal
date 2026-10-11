@@ -31,6 +31,9 @@ def replay(output, method, seed, scenario, traffic, delay, headless=False):
     case = output / f"evaluation/validation/{method}/candidate_{index}"
     case = case / f"seed_{model_seed}/{scenario}/{traffic}"
     original = json.loads((case / "result.json").read_text())
+    identity = json.loads((case / "identity.json").read_text())
+    if sha256(output / "network/arterial.net.xml") != identity["network_sha256"]:
+        raise ValueError("Replay network changed")
     route = output / f"cases/validation/{scenario}/{traffic}/vehicles.rou.xml"
     if sha256(route) != original["route_sha256"]:
         raise ValueError("Replay route changed")
@@ -56,10 +59,11 @@ def replay(output, method, seed, scenario, traffic, delay, headless=False):
         gui_delay=delay,
         start_paused=True,
     )
-    print(
-        "SUMO starts paused: use Play / Stop / Single Step. Delay controls display speed.",
-        flush=True,
-    )
+    if not headless:
+        print(
+            "SUMO starts paused: use Play / Stop / Single Step. Delay controls display speed.",
+            flush=True,
+        )
     try:
         obs, _ = env.reset(seed=traffic)
         while True:
