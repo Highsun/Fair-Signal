@@ -68,6 +68,31 @@ bash scripts/run.sh tensorboard --logdir outputs/stability-50k/models --host 127
 超过 180 秒的比例用于检查队首等待观测可能发生的裁剪，不能反映所有状态分量。
 完整方案与实际结果见 [加长验证记录](stability-results.md)。
 
+## 改进算法的三种子验证
+
+```bash
+# 固定 15 个模型、每个 5 万步；三个独立 CPU 工作进程
+bash scripts/run.sh python scripts/improvement_study.py run --workers 3
+# 可改 --workers 1 串行；完成模型与验证回合会校验后复用
+bash scripts/run.sh python scripts/summarize_validation.py --run outputs/improvement-50k \
+  --destination docs/results/improvement-50k
+bash scripts/run.sh python scripts/improvement_study.py summarize
+bash scripts/run.sh tensorboard --logdir outputs/improvement-50k/models --host 127.0.0.1
+
+# 复核历史行为；会启动 246 次短跑/加长仿真
+bash scripts/run.sh python scripts/check_legacy.py --workers 2
+
+# 观看新状态版本，复用已见过的开发种子 2001，不作为最终测试
+bash scripts/watch.sh --run outputs/improvement-50k --method dqn_dense_state --seed 11
+```
+
+三个种子 11/22/33 共享固定配置，分别写入自身模型目录；父进程评估传统基线。
+该脚本只创建验证车流，不生成预留最终测试车流。程序只在所有工作进程成功后统一选参；
+短预算 smoke 的失败性能不能当作正式结果。实验设计与分析见
+[改进记录](improvement-results.md)。
+新轨迹的 fair_cost 为当前方法的实际公平成本定义；`reward_activation.csv` 优先使用此列。
+历史轨迹缺少该列时，才以队首超阈值判断原成本是否非零。
+
 ## 产物
 
 ```text

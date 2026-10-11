@@ -5,11 +5,13 @@ from __future__ import annotations
 import argparse
 import json
 import multiprocessing
+import shutil
 import time
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from dataclasses import replace
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
 from fair_signal.analysis import hierarchical_summary
@@ -107,6 +109,16 @@ def summarize_pairs(output: Path, destination: Path) -> None:
         table.rename(columns={"test_cases": "validation_cases"}).to_csv(
             destination / name, index=False
         )
+    metrics = ["mean_wait", "p95_wait", "over_threshold_fraction"]
+    global_models = chosen.groupby(["method", "training_seed"], dropna=False)[metrics].mean()
+    complete = chosen.groupby(["method", "training_seed"], dropna=False).valid_complete.all()
+    global_models.loc[~complete, metrics] = float("nan")
+    global_models.reset_index().to_csv(destination / "global_per_model.csv", index=False)
+    global_models.groupby("method")[metrics].agg(["mean", "std"]).to_csv(
+        destination / "global_summary.csv"
+    )
+    if (output / "execution.json").exists():
+        shutil.copy2(output / "execution.json", destination / "execution.json")
     rows = []
     for method, reference in [
         ("dqn_dense", "dqn_fair"),
@@ -142,6 +154,29 @@ def summarize_pairs(output: Path, destination: Path) -> None:
                 )
             rows.append(record)
     pd.DataFrame(rows).to_csv(destination / "paired_by_seed.csv", index=False)
+    reward_rows = []
+    for path in sorted((output / "models").glob("*/*/*/learning.csv")):
+        learning = pd.read_csv(path)
+        metadata = json.loads(path.with_name("training.json").read_text())
+        durations = np.diff(np.r_[0, learning.step.to_numpy()])
+        record = {
+            "method": metadata["method"],
+            "training_seed": metadata["seed"],
+            "logged_episodes": len(learning),
+            "logged_decision_steps": int(learning.step.iloc[-1]),
+            "network_parameters": metadata["network_parameters"],
+        }
+        for suffix, indices in (("all_logged", slice(None)), ("last10", slice(-10, None))):
+            for metric in (
+                "mean_queue_cost",
+                "mean_weighted_fair_cost",
+                "fair_cost_active_fraction",
+            ):
+                record[f"{metric}_{suffix}"] = float(
+                    np.average(learning[metric].to_numpy()[indices], weights=durations[indices])
+                )
+        reward_rows.append(record)
+    pd.DataFrame(reward_rows).to_csv(destination / "training_reward_diagnostics.csv", index=False)
     # Compare model means across seeds; never treat repeated vehicles as training replicas.
     import matplotlib
 

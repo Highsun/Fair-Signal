@@ -29,6 +29,7 @@ flowchart LR
 | `experiment.py` | 训练、验证选择、冻结参数、测试与来源记录 |
 | `analysis.py` | 分层汇总、删失识别、图表与运行报告 |
 | `replay.py` / `cli.py` | 已训练模型加载、运行与 GUI 入口 |
+| `objectives.py` | 显式算法分支配置、全车辆连续公平成本 |
 
 正式环境为本项目实现的 Gymnasium/TraCI 接口。SUMO-RL 仍用于独立的安装联通测试，
 没有将其 `max_green` 参数误认为已执行的约束。DQN 的回放、目标网络和更新由
@@ -169,3 +170,18 @@ TripInfo 已完成数须等于计划车辆数才可标记 valid_complete。
 单训练种子不输出训练标准差，也不把逐车辆样本当作独立训练重复。
 相位、车流、随机源、依赖版本、代码内容 SHA-256、模型/路线校验值随运行保存。
 完全重现应保留对应代码、uv.lock 和整套运行产物；只拷贝 model.zip 不够。
+
+## 后续改进分支
+
+原始六种方法的行为保留，新增两个显式选择的实验方法：
+
+| 方法 | 状态 | 公平成本 |
+| --- | --- | --- |
+| dqn_dense | 原增强 38 维 | 全路网停车车辆累计等待平方的逐秒增量 |
+| dqn_dense_state | 完整信号状态、车道最大等待等 44 维 | 与 dqn_dense 相同 |
+
+新状态分别给出当前/目标相位及 green/yellow/all_red，等待使用 `w/(w+180)`，
+不在 180 秒后硬裁剪。信号约束与标准 SB3 DQN 内核不变。
+新训练回合记录 queue_cost、fair_cost、weighted_fair_cost 与触发比例的决策步均值，
+同时记录到 `traffic/` TensorBoard 标签。实际奖励的定义、检查发现与独立对照设计见
+[改进实验记录](improvement-results.md)。

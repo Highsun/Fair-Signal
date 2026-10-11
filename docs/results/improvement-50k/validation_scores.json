@@ -1,0 +1,82 @@
+[
+  {
+    "method": "fixed",
+    "candidate": 0,
+    "parameters": {
+      "durations": [
+        25,
+        10,
+        25,
+        10
+      ]
+    },
+    "validation_score": 56.72779567117886,
+    "all_cases_complete": true
+  },
+  {
+    "method": "actuated",
+    "candidate": 0,
+    "parameters": {
+      "minimum": 10,
+      "hysteresis": 1.0
+    },
+    "validation_score": 37.24398177322574,
+    "all_cases_complete": true
+  },
+  {
+    "method": "aging",
+    "candidate": 0,
+    "parameters": {
+      "minimum": 10,
+      "hysteresis": 1.0,
+      "aging_weight": 0.1
+    },
+    "validation_score": 36.02875003418151,
+    "all_cases_complete": true
+  },
+  {
+    "method": "dqn_queue",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 0.0
+    },
+    "validation_score": 43.059629974989534,
+    "all_cases_complete": true
+  },
+  {
+    "method": "dqn_wait",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 0.0
+    },
+    "validation_score": 43.50934570263242,
+    "all_cases_complete": true
+  },
+  {
+    "method": "dqn_fair",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 1.0
+    },
+    "validation_score": 42.510423797402844,
+    "all_cases_complete": true
+  },
+  {
+    "method": "dqn_dense",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 0.3
+    },
+    "validation_score": 44.47919442798447,
+    "all_cases_complete": true
+  },
+  {
+    "method": "dqn_dense_state",
+    "candidate": 0,
+    "parameters": {
+      "fair_weight": 0.3
+    },
+    "validation_score": 42.51343704446807,
+    "all_cases_complete": true
+  }
+]

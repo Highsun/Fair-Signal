@@ -5,6 +5,18 @@
       "viewer_sha256": "fe9c58361a5d6c2b15d26d56e99ae290dbd7d41c27f4e690e7a57b3cc9331b5e",
       "reason": "GUI delay, paused start, separate demonstration demand; headless semantics unchanged",
       "verification": "All 36 original test replays match every metric, including the censored DQN case"
+    },
+    {
+      "source_sha256": "f4ba62f4454c52fb0c2f10c49d127fce6771b215ac639d9f27b019fdc399f812",
+      "viewer_sha256": "66ef1163dde41f95001dcb877ca39e6a9a606fa283998db441d723f55b227617",
+      "reason": "Legacy observation/reward branches unchanged; new variants are opt-in",
+      "verification": "All 36 original test and 210 stability validation cases reproduce every metric exactly"
+    },
+    {
+      "source_sha256": "fe9c58361a5d6c2b15d26d56e99ae290dbd7d41c27f4e690e7a57b3cc9331b5e",
+      "viewer_sha256": "66ef1163dde41f95001dcb877ca39e6a9a606fa283998db441d723f55b227617",
+      "reason": "Legacy observation/reward branches unchanged; new variants are opt-in",
+      "verification": "All 36 original test and 210 stability validation cases reproduce every metric exactly"
     }
   ]
 }
