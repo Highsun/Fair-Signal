@@ -1,0 +1,10 @@
+{
+  "verified_pairs": [
+    {
+      "source_sha256": "f4ba62f4454c52fb0c2f10c49d127fce6771b215ac639d9f27b019fdc399f812",
+      "viewer_sha256": "fe9c58361a5d6c2b15d26d56e99ae290dbd7d41c27f4e690e7a57b3cc9331b5e",
+      "reason": "GUI delay, paused start, separate demonstration demand; headless semantics unchanged",
+      "verification": "All 36 original test replays match every metric, including the censored DQN case"
+    }
+  ]
+}

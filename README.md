@@ -136,8 +136,10 @@ bash scripts/run.sh pytest -m integration
 bash scripts/run.sh fair-signal run --config configs/formal.yaml --output outputs/formal
 ```
 
-GUI 演示在上面的 `replay` 命令添加 `--gui`，需 XQuartz 会话可用。
-本机目前只验证无界面运行，不将 `sumo-gui --version` 当作动画渲染验证。
+GUI 推荐执行 `bash scripts/watch.sh`：1 小时仿真车流、默认初始暂停、200 ms 慢速，
+点击 Play 后约可观看 12 分钟及清空阶段。无需重新训练，需 XQuartz 会话可用。
+`bash scripts/watch.sh --gui-delay 1000` 接近实时观看；`--autoplay` 可改为自动开始。
+已有首轮模型经精确代码兼容映射与全部 36 个测试回放核对，可以继续使用。
 完整执行、产物和部署说明见 [运行指南](docs/running.md)。
 
 ## 仓库结构

@@ -82,18 +82,56 @@ bash scripts/run.sh tensorboard --logdir outputs/pilot/models --host 127.0.0.1
 
 ## 加载与演示
 
+推荐直接运行一小时车流的慢速演示：
+
+```bash
+bash scripts/watch.sh
+
+# 更慢：每个仿真秒至少显示约 1 秒；也可换为传统控制
+bash scripts/watch.sh --gui-delay 1000 --method aging
+```
+
+默认复用已有公平 DQN，不重新训练；显示 changing_peak 的 3600 秒需求及清空阶段。
+启动后停在初始状态，点击 SUMO 工具栏 **▶ Play** 才开始。默认 Delay=200 ms，
+对应约 5 倍速，需求阶段约能观看 12 分钟；计算/渲染开销和清空阶段会增加实际耗时。
+可随时用 **■ Stop** 暂停，暂停后 **Single Step / Ctrl+D** 每次前进 1 秒；
+Delay 可在 GUI 中继续修改。加 `--autoplay` 才会自动开始，加 `--gui-delay 0` 才以最快速度播放。
+结束后窗口关闭；等待初始播放时终端没有继续输出属于正常现象。
+Ctrl+C 会关闭该次演示自己的 GUI 子进程，包括尚未开始的暂停窗口。
+观看脚本在 macOS 中优先使用 DISPLAY 或 launchctl 的显示地址，必要时连接已经存在的
+XQuartz `:0` 本地套接字；不修改全局环境变量或 shell 配置。
+每次输出保存到新的 `outputs/gui-1h/<时间戳>/`，可用 `--output` 指定其他项目输出目录。
+
+完整命令及原测试回放入口：
+
 ```bash
 bash scripts/run.sh fair-signal replay --run outputs/pilot --method dqn_fair \
   --seed 11 --scenario changing_peak --traffic-seed 2001 --output outputs/replay
 
-# XQuartz 可用后添加 --gui
+# 一小时车流 + 慢速 + 等待手动开始
+bash scripts/run.sh fair-signal replay --run outputs/pilot --method dqn_fair \
+  --scenario changing_peak --traffic-seed 2001 --demand-seconds 3600 \
+  --output outputs/gui-demo --gui --gui-delay 200
+
+# 原测试车流也默认暂停、慢速
 bash scripts/run.sh fair-signal replay --run outputs/pilot --method aging \
   --scenario imbalanced --traffic-seed 2001 --output outputs/gui-demo --gui
 ```
 
-replay 从 selection.json 读取相位控制参数或模型候选，校验代码与模型身份。
-它使用与原测试相同的网络、路线和 SUMO 种子，不向原实验目录覆盖结果。
+replay 从 selection.json 读取相位控制参数或模型候选，校验代码、网络与模型身份。
+未指定需求时长时，使用原测试路线与种子。指定 `--demand-seconds` 时，在新输出目录
+生成演示车流，并标记 `purpose=demonstration`；原始实验配置和统计不变。
+这是延长推理/观看时间，不是增加训练步数，也不自动成为正式性能实验。
 GUI 是可视化仿真，首版不连接任何真实路口或硬件信号机。
+
+此次观看功能更新与原始首轮源码之间记录了明确的 SHA-256 兼容映射，
+并逐一回放原始 36 个测试实例，所有指标一致（包括有删失的失败回合）。
+旧模型因此可以继续观看；模型、路线和网络校验仍执行，训练/评估续跑仍要求精确源码身份。
+未来任意源码修改会使这条映射失效，不提供通用“跳过校验”选项。
+
+已在本机实际运行带延迟的 SUMO GUI 自动播放通路，并与同车流无界面指标核对。
+一小时车流的独立无界面检查中，1192 辆车全部完成，清空用时 81 秒；此结果仅用于演示检查。
+按钮位置和快捷键可参考 [SUMO GUI 官方说明](https://sumo.dlr.de/docs/sumo-gui.html)。
 
 ## 跨机器复现与清理
 

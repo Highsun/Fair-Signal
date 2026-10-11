@@ -11,6 +11,8 @@ import shutil
 import subprocess
 import sys
 
+from traci.exceptions import FatalTraCIError, TraCIException
+
 from fair_signal.runtime import configure_sumo, output_directory, project_root
 
 
@@ -93,6 +95,20 @@ def main(argv: list[str] | None = None) -> int:
     replay_parser.add_argument("--traffic-seed", type=int, default=2001)
     replay_parser.add_argument("--output", default="outputs/replay")
     replay_parser.add_argument("--gui", action="store_true")
+    replay_parser.add_argument(
+        "--gui-delay",
+        type=int,
+        default=200,
+        help="Milliseconds per GUI step; default 200, 0 means fastest",
+    )
+    replay_parser.add_argument(
+        "--autoplay",
+        action="store_true",
+        help="Start GUI immediately; by default it waits for Play",
+    )
+    replay_parser.add_argument(
+        "--demand-seconds", type=int, help="Generate separate demonstration demand of this duration"
+    )
     args = parser.parse_args(argv)
     if args.command == "doctor":
         return doctor()
@@ -124,8 +140,22 @@ def main(argv: list[str] | None = None) -> int:
                     args.traffic_seed,
                     destination,
                     args.gui,
+                    gui_delay=args.gui_delay,
+                    start_paused=not args.autoplay,
+                    demand_seconds=args.demand_seconds,
                 )
-        except (OSError, ValueError, RuntimeError, KeyError, TypeError) as exc:
+        except KeyboardInterrupt:
+            print("Stopped by user.", file=sys.stderr)
+            return 130
+        except (
+            OSError,
+            ValueError,
+            RuntimeError,
+            KeyError,
+            TypeError,
+            FatalTraCIError,
+            TraCIException,
+        ) as exc:
             print(f"{args.command} failed: {exc}", file=sys.stderr)
             return 1
         print(json.dumps(result, ensure_ascii=False, indent=2))

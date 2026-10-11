@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import csv
+import subprocess
+import sys
 import uuid
 import xml.etree.ElementTree as ET
 from pathlib import Path
@@ -11,6 +13,7 @@ import gymnasium as gym
 import numpy as np
 import traci
 import traci.constants as tc
+from sumolib.miscutils import getFreeSocketPort
 
 from fair_signal.config import SCENARIOS, EnvConfig
 from fair_signal.demand import DIRECTIONS, LANES, PHASE_LANES, generate_routes, save_json
@@ -70,6 +73,16 @@ def write_rows(path: Path, rows: list[dict]) -> None:
         writer.writerows(rows)
 
 
+def gui_arguments(delay_ms: int, start_paused: bool) -> list[str]:
+    """Presentation options only; they never change the simulator time step."""
+    if type(delay_ms) is not int or not 0 <= delay_ms <= 10000:
+        raise ValueError("GUI delay must be an integer between 0 and 10000 milliseconds")
+    arguments = ["--delay", str(delay_ms), "--quit-on-end"]
+    if not start_paused:
+        arguments.append("--start")
+    return arguments
+
+
 class TrafficEnv(gym.Env):
     """One-second simulator, five-second decisions; actions request green phases.
 
@@ -92,6 +105,8 @@ class TrafficEnv(gym.Env):
         sumo_seed: int = 0,
         gui: bool = False,
         trace: bool = False,
+        gui_delay: int = 200,
+        start_paused: bool = True,
     ):
         super().__init__()
         config.validate()
@@ -100,11 +115,14 @@ class TrafficEnv(gym.Env):
         self.enhanced, self.fair_weight = enhanced, fair_weight
         self.route_file, self.scenario = route_file, scenario
         self.sumo_seed, self.gui, self.trace = sumo_seed, gui, trace
+        self.gui_delay, self.start_paused = gui_delay, start_paused
+        gui_arguments(gui_delay, start_paused)
         self.action_space = gym.spaces.Discrete(4)
         self.observation_space = gym.spaces.Box(
             0.0, 1.0, shape=(38 if enhanced else 22,), dtype=np.float32
         )
         self.connection = None
+        self.gui_process: subprocess.Popen | None = None
         self.episode = -1
         self.summary: dict | None = None
         self.signal = Signal(config)
@@ -157,10 +175,28 @@ class TrafficEnv(gym.Env):
             str(self.episode_dir / "sumo.log"),
         ]
         if self.gui:
-            cmd += ["--start", "--quit-on-end"]
+            cmd += gui_arguments(self.gui_delay, self.start_paused)
+            if self.start_paused:
+                print(
+                    "SUMO GUI starts paused. Click Play (▶) in its toolbar to begin; "
+                    "then Stop/Single Step controls remain available.",
+                    flush=True,
+                )
         label = f"fair-signal-{uuid.uuid4().hex}"
-        traci.start(cmd, label=label, doSwitch=False, stdout=None)
-        self.connection = traci.getConnection(label)
+        if self.gui:
+            # A paused GUI blocks TraCI commands, including startup and close.
+            # Keep our process handle so Ctrl+C can still clean it up.
+            port = getFreeSocketPort()
+            self.gui_process = subprocess.Popen(cmd + ["--remote-port", str(port)])
+            try:
+                self.connection = traci.connect(port, proc=self.gui_process, waitBetweenRetries=0.1)
+                self.connection.getVersion()
+            except BaseException:
+                self.close()
+                raise
+        else:
+            traci.start(cmd, label=label, doSwitch=False, stdout=None)
+            self.connection = traci.getConnection(label)
         self.signal = Signal(self.config)
         self.connection.trafficlight.setRedYellowGreenState("t", self.signal.state)
         self.capacity = np.array([self.connection.lane.getLength(lane) / 7.5 for lane in LANES])
@@ -347,6 +383,25 @@ class TrafficEnv(gym.Env):
         write_rows(self.episode_dir / "trace.csv", self.trace_rows)
 
     def close(self):
+        if self.gui_process is not None and sys.exc_info()[0] is not None:
+            self._stop_gui_process()
         if self.connection is not None:
-            self.connection.close()
-            self.connection = None
+            try:
+                self.connection.close()
+            except (traci.FatalTraCIError, OSError):
+                if not self.gui:
+                    raise
+            finally:
+                self.connection = None
+        self._stop_gui_process()
+
+    def _stop_gui_process(self) -> None:
+        if self.gui_process is not None:
+            process, self.gui_process = self.gui_process, None
+            if process.poll() is None:
+                process.terminate()
+                try:
+                    process.wait(timeout=3)
+                except subprocess.TimeoutExpired:
+                    process.kill()
+                    process.wait()
