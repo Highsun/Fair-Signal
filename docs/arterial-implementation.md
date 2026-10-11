@@ -16,6 +16,7 @@ Gymnasium 与 Stable-Baselines3 DQN，在现有 uv 环境中运行。
 | `scripts/arterial_study.py` | 冻结配置、调参、训练、开发验证和产物复用检查 |
 | `scripts/summarize_arterial.py` | 完整矩阵、身份与日志审计，模型种子统计、配对差值与静态图 |
 | `scripts/view_arterial.py` | 已有验证车流的 GUI/无界面精确回放 |
+| `scripts/diagnose_arterial.py` | 保持控制不变，读取末端车辆和绿灯需求，诊断清空失败 |
 
 全部运行产物写入 `outputs/`，小型 CSV/JSON/图片报告写入 `docs/results/`。
 模型、训练日志、路线和逐秒轨迹不提交 Git。实验代码摘要包含本模块、实际复用的基础代码、

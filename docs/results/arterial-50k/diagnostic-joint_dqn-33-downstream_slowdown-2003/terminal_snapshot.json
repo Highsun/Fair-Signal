@@ -1,0 +1,355 @@
+{
+  "second": 2700,
+  "truncated": true,
+  "vehicles": [
+    {
+      "vehicle": "e_001054",
+      "lane": "b_a_0",
+      "position": 328.1989133749102,
+      "speed": 0.0,
+      "route": [
+        "e_b",
+        "b_a",
+        "a_w"
+      ],
+      "route_index": 1,
+      "next_signals": [
+        [
+          "a",
+          4,
+          1.0010866250897834,
+          "r"
+        ]
+      ],
+      "best_lanes": [
+        [
+          "b_a_0",
+          618.8,
+          0.0,
+          0,
+          true,
+          [
+            "b_a_0",
+            "a_w_0"
+          ]
+        ],
+        [
+          "b_a_1",
+          329.2,
+          0.0,
+          -1,
+          false,
+          [
+            "b_a_1"
+          ]
+        ]
+      ],
+      "lifetime_stop": 618,
+      "needed_phases": [
+        {
+          "junction": "a",
+          "link_index": 4,
+          "phase": 2
+        }
+      ]
+    },
+    {
+      "vehicle": "e_001059",
+      "lane": "b_a_0",
+      "position": 320.6979011589507,
+      "speed": 0.0,
+      "route": [
+        "e_b",
+        "b_a",
+        "a_w"
+      ],
+      "route_index": 1,
+      "next_signals": [
+        [
+          "a",
+          4,
+          8.502098841049303,
+          "r"
+        ]
+      ],
+      "best_lanes": [
+        [
+          "b_a_0",
+          618.8,
+          0.0,
+          0,
+          true,
+          [
+            "b_a_0",
+            "a_w_0"
+          ]
+        ],
+        [
+          "b_a_1",
+          329.2,
+          0.0,
+          -1,
+          false,
+          [
+            "b_a_1"
+          ]
+        ]
+      ],
+      "lifetime_stop": 584,
+      "needed_phases": [
+        {
+          "junction": "a",
+          "link_index": 4,
+          "phase": 2
+        }
+      ]
+    },
+    {
+      "vehicle": "e_001061",
+      "lane": "b_a_0",
+      "position": 313.1968903463316,
+      "speed": 0.0,
+      "route": [
+        "e_b",
+        "b_a",
+        "a_w"
+      ],
+      "route_index": 1,
+      "next_signals": [
+        [
+          "a",
+          4,
+          16.00310965366839,
+          "r"
+        ]
+      ],
+      "best_lanes": [
+        [
+          "b_a_0",
+          618.8,
+          0.0,
+          0,
+          true,
+          [
+            "b_a_0",
+            "a_w_0"
+          ]
+        ],
+        [
+          "b_a_1",
+          329.2,
+          0.0,
+          -1,
+          false,
+          [
+            "b_a_1"
+          ]
+        ]
+      ],
+      "lifetime_stop": 575,
+      "needed_phases": [
+        {
+          "junction": "a",
+          "link_index": 4,
+          "phase": 2
+        }
+      ]
+    },
+    {
+      "vehicle": "e_001068",
+      "lane": "b_a_0",
+      "position": 305.69581734811374,
+      "speed": 0.0,
+      "route": [
+        "e_b",
+        "b_a",
+        "a_w"
+      ],
+      "route_index": 1,
+      "next_signals": [
+        [
+          "a",
+          4,
+          23.504182651886254,
+          "r"
+        ]
+      ],
+      "best_lanes": [
+        [
+          "b_a_0",
+          618.8,
+          0.0,
+          0,
+          true,
+          [
+            "b_a_0",
+            "a_w_0"
+          ]
+        ],
+        [
+          "b_a_1",
+          329.2,
+          0.0,
+          -1,
+          false,
+          [
+            "b_a_1"
+          ]
+        ]
+      ],
+      "lifetime_stop": 570,
+      "needed_phases": [
+        {
+          "junction": "a",
+          "link_index": 4,
+          "phase": 2
+        }
+      ]
+    },
+    {
+      "vehicle": "e_001079",
+      "lane": "b_a_0",
+      "position": 298.19481334361353,
+      "speed": 0.0,
+      "route": [
+        "e_b",
+        "b_a",
+        "a_w"
+      ],
+      "route_index": 1,
+      "next_signals": [
+        [
+          "a",
+          4,
+          31.005186656386456,
+          "r"
+        ]
+      ],
+      "best_lanes": [
+        [
+          "b_a_0",
+          618.8,
+          0.0,
+          0,
+          true,
+          [
+            "b_a_0",
+            "a_w_0"
+          ]
+        ],
+        [
+          "b_a_1",
+          329.2,
+          0.0,
+          -1,
+          false,
+          [
+            "b_a_1"
+          ]
+        ]
+      ],
+      "lifetime_stop": 561,
+      "needed_phases": [
+        {
+          "junction": "a",
+          "link_index": 4,
+          "phase": 2
+        }
+      ]
+    }
+  ],
+  "signals": {
+    "a": {
+      "phase": 3,
+      "mode": "green",
+      "target": 3,
+      "elapsed": 46,
+      "lanes": [
+        "an_a_0",
+        "an_a_1",
+        "as_a_0",
+        "as_a_1",
+        "b_a_0",
+        "b_a_1",
+        "w_a_0",
+        "w_a_1"
+      ],
+      "counts": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "queues": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        5.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "request_ages": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        50.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "b": {
+      "phase": 3,
+      "mode": "green",
+      "target": 3,
+      "elapsed": 21,
+      "lanes": [
+        "bn_b_0",
+        "bn_b_1",
+        "bs_b_0",
+        "bs_b_1",
+        "e_b_0",
+        "e_b_1",
+        "a_b_0",
+        "a_b_1"
+      ],
+      "counts": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "queues": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "request_ages": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

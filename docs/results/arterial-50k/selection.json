@@ -1,0 +1,40 @@
+{
+  "coordinated_fixed": {
+    "candidate": 5,
+    "parameters": {
+      "durations": [
+        20,
+        10,
+        35,
+        10
+      ],
+      "offset": 50
+    },
+    "tuning_score": 96.61749134545339
+  },
+  "actuated": {
+    "candidate": 0,
+    "parameters": {
+      "minimum": 10,
+      "hysteresis": 1.0
+    },
+    "tuning_score": 78.64516813988489
+  },
+  "aging": {
+    "candidate": 0,
+    "parameters": {
+      "minimum": 10,
+      "hysteresis": 1.0,
+      "aging_weight": 0.1
+    },
+    "tuning_score": 82.78808165234962
+  },
+  "max_pressure": {
+    "candidate": 0,
+    "parameters": {
+      "minimum": 10,
+      "hysteresis": 1.0
+    },
+    "tuning_score": 87.19109524065108
+  }
+}

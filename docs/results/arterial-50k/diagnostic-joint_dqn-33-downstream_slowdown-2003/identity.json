@@ -1,0 +1,13 @@
+{
+  "method": "joint_dqn",
+  "training_seed": 33,
+  "scenario": "downstream_slowdown",
+  "traffic_seed": 2003,
+  "source_sha256": "6f1b6809541b465761a26874f3284cae392ce262cf1060062bdff4a07af3e17c",
+  "diagnostic_script_sha256": "1289223d1224b732f9aa148375e15e02d661d852e8c7f82bfa46dc5cb8011cc6",
+  "viewer_script_sha256": "53ed246a19a6499aac59342685394ce415d5d5ec4725a716acc8ecb0176660d9",
+  "replay_all_metrics_equal": true,
+  "simulation_limit_unchanged": true,
+  "model_sha256": "2afc861eb71a74ac8cc2ba93c49da70d52ea8f20d62290a3996dc18cc22f5962",
+  "route_sha256": "040540abcd62020ec08df95b291ccf7816c1caca8767cd25442c65912062d2c9"
+}

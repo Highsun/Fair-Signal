@@ -255,9 +255,12 @@ bash scripts/run.sh python scripts/summarize_arterial.py
 bash scripts/run.sh tensorboard --logdir outputs/arterial-50k/models --host 127.0.0.1
 # 已有验证车流的 GUI 回放；默认暂停，点 Play 开始，Delay 调速度
 bash scripts/run.sh python scripts/view_arterial.py --method joint_dqn --scenario tidal --delay 100
+# 不改变原控制，复现唯一失败回合并导出末端车辆/相位需求诊断
+bash scripts/run.sh python scripts/diagnose_arterial.py
 ```
 
 模型位于 `outputs/arterial-50k/models/<方法>/seed_<种子>/model.zip`。
 `--stage tune/train/evaluate` 可单独执行阶段；已完成产物只有在代码、配置、路线和模型
 校验一致时才复用。改变算法或参数请使用新的 `--output`，避免混用结果。
 本轮仅开发验证，不生成或运行预留测试集。
+完整结果与局限见[两路口结果](arterial-results.md)。

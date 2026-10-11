@@ -1,0 +1,64 @@
+{
+  "config": {
+    "label": "arterial-smoke",
+    "env": {
+      "demand_seconds": 120,
+      "drain_seconds": 900,
+      "queue_scale": 160.0
+    },
+    "training_steps": 128,
+    "learning_starts": 16,
+    "training_seeds": [
+      11
+    ],
+    "tuning_seeds": [
+      901
+    ],
+    "validation_seeds": [
+      2001
+    ],
+    "reserved_test_seeds": [
+      4001,
+      4002,
+      4003,
+      4004,
+      4005,
+      4006,
+      4007,
+      4008,
+      4009,
+      4010
+    ],
+    "scenarios": [
+      "steady",
+      "tidal",
+      "downstream_slowdown"
+    ],
+    "methods": [
+      "coordinated_fixed",
+      "actuated",
+      "aging",
+      "max_pressure",
+      "local_dqn",
+      "joint_dqn",
+      "fair_joint_dqn"
+    ],
+    "fair_weight": 1.0,
+    "guard_threshold": 180.0,
+    "hidden": [
+      32,
+      32
+    ],
+    "learning_rate": 0.0003,
+    "gamma": 0.99,
+    "buffer_size": 512,
+    "batch_size": 16,
+    "train_freq": 4,
+    "target_update_interval": 1000,
+    "exploration_fraction": 0.5
+  },
+  "source_sha256": "6f1b6809541b465761a26874f3284cae392ce262cf1060062bdff4a07af3e17c",
+  "test_evaluated": false,
+  "selection_rule": "complete tuning matrix; minimize mean(mean_wait + 0.5*p95_wait)",
+  "all_methods_guarded_during_training_and_evaluation": true
+}

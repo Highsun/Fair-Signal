@@ -89,6 +89,10 @@
 
 本轮不扫描奖励权重、不按验证表现重选训练种子或检查点、不提前终止失败模型来美化结果。
 
+在验证开始前，汇总工具增加按预生成路线是否经过两个路口的分组诊断，
+单独统计连续通过车辆的等待、含插入延迟行程时间与停车次数；不改变主指标、训练或选参。
+停车次数是 SUMO 的等待阶段次数，不等于经过红灯路口的数量。
+
 ## 开发期间的记账修正
 
 完整车流预检查曾在传统调参阶段停止，尚未开始模型训练。固定配时、tidal/902 中，
@@ -98,3 +102,12 @@
 的 accumulatedWaitingTime；仍逐车严格核对最终 TripInfo，没有放宽质量门。
 新增完整 1800 秒原案例回归检查。旧中止产物保留在
 `outputs/arterial-accounting-precheck/`，不复用到修正后的实验。
+
+## 研究参考
+
+- [PressLight: Learning Max Pressure Control to Coordinate Traffic Signals in Arterial Network](https://faculty.ist.psu.edu/jessieli/Publications/2019-KDD-presslight.pdf)：
+  参考多路口 DQN、上下游状态与压力控制之间的联系；本项目不声称复现其论文算法与实验。
+- [Expression Might Be Enough: Representing Pressure and Demand for Reinforcement Learning Based Traffic Signal Control](https://arxiv.org/abs/2112.10107)：
+  提醒我们保留利用排队与行驶车辆信息的强传统基线，不能预设学习方法必胜。
+- [SUMO Traffic Lights](https://sumo.dlr.de/docs/Simulation/Traffic_Lights.html)：
+  交通灯配时与协调功能说明；本项目实际执行使用独立的统一信号状态机。

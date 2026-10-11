@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
+import xml.etree.ElementTree as ET
 from pathlib import Path
 
 import matplotlib
 import numpy as np
 import pandas as pd
 from arterial_study import LEARNED, TRADITIONAL, candidates, source_digest
+from sumolib.net import readNet
 from tensorboard.backend.event_processing.event_accumulator import EventAccumulator
 
 matplotlib.use("Agg")
@@ -36,6 +39,9 @@ METRICS = (
     "connector_congested_fraction",
     "guard_overrides",
     "switches",
+    "cross_mean_wait",
+    "cross_mean_system_time",
+    "cross_mean_stops",
 )
 LABELS = {
     "coordinated_fixed": "Coordinated\nfixed",
@@ -105,6 +111,7 @@ def summarize(output):
             raise ValueError("Baseline selection does not reproduce")
     traces_checked = intervals = 0
     hashes = {}
+    cohorts = []
     for split, cases in (("tuning", tuning), ("validation", frame)):
         for row in cases.itertuples():
             seed = (
@@ -137,8 +144,74 @@ def summarize(output):
                 trace.second, np.arange(1, len(trace) + 1)
             ):
                 raise ValueError("Non-contiguous simulation trace")
-            intervals += audit_signal_rows(trace.to_dict("records"), EnvConfig(**config["env"]))
+            env_config = EnvConfig(**config["env"])
+            limits = {
+                "green": env_config.max_green,
+                "yellow": env_config.yellow_seconds,
+                "all_red": env_config.all_red_seconds,
+            }
+            for junction in ("a", "b"):
+                upper = trace[f"{junction}_mode"].map(limits)
+                elapsed = trace[f"{junction}_elapsed"]
+                if upper.isna().any() or (elapsed < 0).any() or (elapsed >= upper).any():
+                    raise ValueError("Invalid physical timer, including final partial intervals")
+            demand = trace.iloc[: config["env"]["demand_seconds"]]
+            if not np.isclose(demand.queue.mean(), row.mean_queue):
+                raise ValueError("Demand-window queue does not reproduce from trace")
+            if not np.isclose(demand.pending.mean(), row.mean_pending):
+                raise ValueError("Pending insertion does not reproduce from trace")
+            decision_rows = trace.iloc[:: config["env"].get("decision_seconds", 5)]
+            if decision_rows.guard_overrides.sum() != row.guard_overrides:
+                raise ValueError("Guard intervention counter does not reproduce")
+            trips = ET.parse(directory / "episode_00000/tripinfo.xml").getroot().findall("tripinfo")
+            if sum(float(t.get("waitingTime")) for t in trips) != trace.queue.sum():
+                raise ValueError("Full-network waiting integral differs from TripInfo")
+            if split == "validation":
+                cross_ids = {
+                    vehicle.get("id")
+                    for vehicle in ET.parse(route).getroot().findall("vehicle")
+                    if len(vehicle.find("route").get("edges").split()) == 3
+                }
+                complete_cross = [
+                    trip
+                    for trip in trips
+                    if trip.get("id") in cross_ids
+                    and float(trip.get("arrival", "-1")) >= 0
+                    and trip.get("vaporized", "") in ("", "false", "0")
+                ]
+                cohort = {
+                    "method": row.method,
+                    "training_seed": -1 if seed is None else seed,
+                    "scenario": row.scenario,
+                    "traffic_seed": row.traffic_seed,
+                    "cross_planned": len(cross_ids),
+                    "cross_completed": len(complete_cross),
+                }
+                for metric, fields in (
+                    ("cross_mean_wait", ("waitingTime",)),
+                    ("cross_mean_system_time", ("duration", "departDelay")),
+                    ("cross_mean_stops", ("waitingCount",)),
+                ):
+                    cohort[metric] = (
+                        float(
+                            np.mean(
+                                [
+                                    sum(float(trip.get(field)) for field in fields)
+                                    for trip in complete_cross
+                                ]
+                            )
+                        )
+                        if complete_cross
+                        else None
+                    )
+                cohorts.append(cohort)
+            intervals += audit_signal_rows(trace.to_dict("records"), env_config)
             traces_checked += 1
+    frame = frame.merge(
+        pd.DataFrame(cohorts),
+        on=["method", "training_seed", "scenario", "traffic_seed"],
+        validate="one_to_one",
+    )
     events = []
     training = []
     for method in LEARNED:
@@ -237,9 +310,9 @@ def summarize(output):
                 suffixes=("", "_reference"),
                 validate="one_to_one" if reference in LEARNED else "many_to_one",
             )
-            valid = bool(joined.valid_complete.all() and joined.valid_complete_reference.all())
             for scope in ["all", *config["scenarios"]]:
                 part = joined if scope == "all" else joined[joined.scenario == scope]
+                valid = bool(part.valid_complete.all() and part.valid_complete_reference.all())
                 row = {
                     "method": method,
                     "reference": reference,
@@ -252,6 +325,9 @@ def summarize(output):
                 paired.append(row)
     destination = project_root() / "docs/results" / output.name
     destination.mkdir(parents=True, exist_ok=True)
+    for name in ("study.json", "provenance.json", "execution_all.json"):
+        if (output / name).exists():
+            shutil.copyfile(output / name, destination / name)
     frame.to_csv(destination / "validation.csv", index=False)
     tuning.to_csv(destination / "tuning.csv", index=False)
     summary.to_csv(destination / "summary.csv", index=False)
@@ -275,6 +351,7 @@ def summarize(output):
         "test_generated_or_evaluated": False,
         "route_sha256": hashes,
         "tensorboard": events,
+        "input_directory": str(output.relative_to(project_root())),
         "inputs": {
             name: sha256(output / name)
             for name in (
@@ -306,6 +383,9 @@ def summarize(output):
             capsize=3,
             color=["#458b74"] * 4 + ["#7896c6", "#4468a2", "#b65b69"],
         )
+        for index, eligible in enumerate(global_rows.eligible):
+            if not eligible:
+                axis.text(index, 0, "incomplete", rotation=90, ha="center", va="bottom")
         axis.set_xticks(positions, [LABELS[m] for m in global_rows.method], rotation=35, ha="right")
         axis.set_title(title)
         axis.grid(axis="y", alpha=0.2)
@@ -315,6 +395,61 @@ def summarize(output):
     )
     fig.tight_layout()
     fig.savefig(destination / "comparison.png", dpi=160)
+    plt.close(fig)
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    for method, color in zip(LEARNED, ("#7896c6", "#4468a2", "#b65b69"), strict=True):
+        for index, seed in enumerate(config["training_seeds"]):
+            path = output / f"models/{method}/seed_{seed}/learning.csv"
+            if not path.exists():
+                continue
+            episodes = pd.read_csv(path)
+            for axis, metric in zip(axes, ("valid_complete", "mean_queue"), strict=True):
+                values = episodes[metric]
+                if metric == "mean_queue":
+                    values = values + episodes.mean_pending
+                axis.plot(
+                    episodes.step,
+                    values.rolling(10, min_periods=1).mean(),
+                    color=color,
+                    linestyle=("-", "--", ":")[index % 3],
+                    alpha=0.8,
+                    label=LABELS[method].replace("\n", " ") if index == 0 else None,
+                )
+    axes[0].set_ylabel("Complete episode fraction (rolling 10)")
+    axes[0].set_ylim(-0.03, 1.03)
+    axes[1].set_ylabel("Stopped + pending (rolling 10 episodes)")
+    for axis in axes:
+        axis.set_xlabel("Joint decision steps")
+        axis.grid(alpha=0.2)
+        axis.legend()
+    fig.suptitle("Training diagnostics; line styles distinguish model seeds")
+    fig.tight_layout()
+    fig.savefig(destination / "training.png", dpi=160)
+    plt.close(fig)
+    network = readNet(str(output / "network/arterial.net.xml"))
+    fig, axis = plt.subplots(figsize=(9, 5))
+    for edge in network.getEdges():
+        xy = np.asarray(edge.getShape())
+        axis.plot(xy[:, 0], xy[:, 1], color="#aaaaaa", linewidth=3, zorder=1)
+    for edge_id in ("w_a", "a_b", "b_e"):
+        xy = np.asarray(network.getEdge(edge_id).getShape())
+        axis.plot(xy[:, 0], xy[:, 1], color="#4468a2", linewidth=2, zorder=2)
+    for node in network.getNodes():
+        x, y = node.getCoord()
+        signal = node.getID() in ("a", "b")
+        axis.scatter(
+            [x], [y], color="#b65b69" if signal else "#555555", s=65 if signal else 20, zorder=3
+        )
+        axis.annotate(node.getID().upper(), (x, y), xytext=(8, 8), textcoords="offset points")
+    x_a, y_a = network.getNode("a").getCoord()
+    x_b, _ = network.getNode("b").getCoord()
+    axis.annotate("", (x_a, y_a - 100), (x_b, y_a - 100), arrowprops={"arrowstyle": "<->"})
+    axis.text((x_a + x_b) / 2, y_a - 90, "350 m", ha="center")
+    axis.set_title("Original two-junction network; blue: an example cross-junction route")
+    axis.set_aspect("equal")
+    axis.axis("off")
+    fig.tight_layout()
+    fig.savefig(destination / "network.png", dpi=160)
     plt.close(fig)
     lines = [
         "# 两路口开发验证汇总",
@@ -346,6 +481,27 @@ def summarize(output):
         "",
     ]
     (destination / "report.md").write_text("\n".join(lines))
+    quality["exported_files"] = {
+        name: sha256(destination / name)
+        for name in (
+            "validation.csv",
+            "tuning.csv",
+            "summary.csv",
+            "per_seed.csv",
+            "paired_differences.csv",
+            "training.csv",
+            "selection.json",
+            "study.json",
+            "provenance.json",
+            "execution_all.json",
+            "comparison.png",
+            "training.png",
+            "network.png",
+            "report.md",
+        )
+        if (destination / name).exists()
+    }
+    save_json(destination / "quality.json", quality)
     print(
         global_rows[
             [

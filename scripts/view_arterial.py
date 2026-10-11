@@ -14,7 +14,7 @@ from fair_signal.demand import sha256
 from fair_signal.runtime import output_directory
 
 
-def replay(output, method, seed, scenario, traffic, delay, headless=False):
+def replay(output, method, seed, scenario, traffic, delay, headless=False, env_class=ArterialEnv):
     import torch
     from stable_baselines3 import DQN
 
@@ -45,7 +45,7 @@ def replay(output, method, seed, scenario, traffic, delay, headless=False):
         model = DQN.load(path, device="cpu")
     else:
         controller = ArterialController(method, selected[method]["parameters"])
-    env = ArterialEnv(
+    env = env_class(
         EnvConfig(**config["env"]),
         output / "network/arterial.net.xml",
         output / f"viewer/{method}/{seed}/{scenario}/{traffic}",
