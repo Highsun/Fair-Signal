@@ -18,4 +18,3 @@ Groups stay separate. SD is across model-seed means, not a confidence interval.
 | crossing_90 | 3/3 | 36.54 | 117.17 | 8.37% | 104.07 | 4.29 |
 | matched_full | 3/3 | 40.53 | 125.64 | 10.72% | 120.00 | 5.76 |
 | matched_local | 3/3 | 42.79 | 130.61 | 10.92% | 127.90 | 6.67 |
-

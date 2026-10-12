@@ -329,7 +329,7 @@ bash scripts/run.sh python scripts/pre_evaluate_iteration.py --workers 1
 
 ```bash
 bash scripts/run.sh python scripts/view_iteration.py \
-  --method crossing_30 --seed 11 \
+  --method residual_dqn --seed 11 \
   --case downstream_slowdown_rate1_3001 --delay 200
 ```
 
@@ -338,3 +338,6 @@ crossing_30/crossing_90/matched_full/matched_local。
 需求变动案例名如`tidal_rate1.2_3001`，窗口移动如`downstream_slowdown_window300_3001`。
 最终测试完成后可用`--split test --case downstream_slowdown_4001`观看。
 `--headless`会无界面回放并逐项核对冻结指标；查看不会生成尚未评价的测试案例。
+
+本轮预留4001–4010已完成最终评价，结果见[迭代结果](iteration-results.md)。
+若继续据此开发新方案，需另留未见测试车流；原历史study里的未使用标记是当时的实验状态。

@@ -71,7 +71,7 @@ def replay(output, method, seed, split, case_id, delay, headless=False):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", default="outputs/iteration-50k")
-    parser.add_argument("--method", choices=METHODS, default="crossing_30")
+    parser.add_argument("--method", choices=METHODS, default="residual_dqn")
     parser.add_argument("--seed", type=int, default=11)
     parser.add_argument("--split", choices=("development", "test"), default="development")
     parser.add_argument("--case", default="downstream_slowdown_rate1_3001")

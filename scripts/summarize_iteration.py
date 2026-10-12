@@ -671,7 +671,7 @@ def audit_and_export(output, splits=("development", "test")):
                 f"| {row.method} | {row.complete_cases}/{row.cases} | " + " | ".join(values) + " |"
             )
         lines.append("")
-    (destination / "report.md").write_text("\n".join(lines) + "\n")
+    (destination / "report.md").write_text("\n".join(lines).rstrip() + "\n")
     save_json(
         destination / "quality.json",
         {

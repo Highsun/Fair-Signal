@@ -1,0 +1,332 @@
+[
+  {
+    "id": "steady_4001",
+    "scenario": "steady",
+    "traffic": 4001,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "steady_4002",
+    "scenario": "steady",
+    "traffic": 4002,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "steady_4003",
+    "scenario": "steady",
+    "traffic": 4003,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "steady_4004",
+    "scenario": "steady",
+    "traffic": 4004,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "steady_4005",
+    "scenario": "steady",
+    "traffic": 4005,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "steady_4006",
+    "scenario": "steady",
+    "traffic": 4006,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "steady_4007",
+    "scenario": "steady",
+    "traffic": 4007,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "steady_4008",
+    "scenario": "steady",
+    "traffic": 4008,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "steady_4009",
+    "scenario": "steady",
+    "traffic": 4009,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "steady_4010",
+    "scenario": "steady",
+    "traffic": 4010,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "tidal_4001",
+    "scenario": "tidal",
+    "traffic": 4001,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "tidal_4002",
+    "scenario": "tidal",
+    "traffic": 4002,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "tidal_4003",
+    "scenario": "tidal",
+    "traffic": 4003,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "tidal_4004",
+    "scenario": "tidal",
+    "traffic": 4004,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "tidal_4005",
+    "scenario": "tidal",
+    "traffic": 4005,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "tidal_4006",
+    "scenario": "tidal",
+    "traffic": 4006,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "tidal_4007",
+    "scenario": "tidal",
+    "traffic": 4007,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "tidal_4008",
+    "scenario": "tidal",
+    "traffic": 4008,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "tidal_4009",
+    "scenario": "tidal",
+    "traffic": 4009,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "tidal_4010",
+    "scenario": "tidal",
+    "traffic": 4010,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "downstream_slowdown_4001",
+    "scenario": "downstream_slowdown",
+    "traffic": 4001,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "downstream_slowdown_4002",
+    "scenario": "downstream_slowdown",
+    "traffic": 4002,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "downstream_slowdown_4003",
+    "scenario": "downstream_slowdown",
+    "traffic": 4003,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "downstream_slowdown_4004",
+    "scenario": "downstream_slowdown",
+    "traffic": 4004,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "downstream_slowdown_4005",
+    "scenario": "downstream_slowdown",
+    "traffic": 4005,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "downstream_slowdown_4006",
+    "scenario": "downstream_slowdown",
+    "traffic": 4006,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "downstream_slowdown_4007",
+    "scenario": "downstream_slowdown",
+    "traffic": 4007,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "downstream_slowdown_4008",
+    "scenario": "downstream_slowdown",
+    "traffic": 4008,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "downstream_slowdown_4009",
+    "scenario": "downstream_slowdown",
+    "traffic": 4009,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  },
+  {
+    "id": "downstream_slowdown_4010",
+    "scenario": "downstream_slowdown",
+    "traffic": 4010,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "test"
+  }
+]
