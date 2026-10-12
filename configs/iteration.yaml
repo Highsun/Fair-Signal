@@ -1,0 +1,30 @@
+label: iteration-50k
+reference: outputs/residual-50k
+env:
+  demand_seconds: 1800
+  drain_seconds: 900
+  queue_scale: 160.0
+training_steps: 50000
+learning_starts: 1000
+training_seeds: [11, 22, 33]
+development_seeds: [3001, 3002]
+test_seeds: [4001, 4002, 4003, 4004, 4005, 4006, 4007, 4008, 4009, 4010]
+demand_multipliers: [0.8, 1.0, 1.2]
+shifted_windows: [[300, 900], [900, 1500]]
+extension_seconds: 10
+urgent_threshold: 90.0
+guard_threshold: 180.0
+hidden: [128, 128]
+learning_rate: 0.0003
+gamma: 0.99
+buffer_size: 50000
+batch_size: 64
+train_freq: 4
+target_update_interval: 1000
+exploration_fraction: 0.5
+variants:
+  excess_025: {crossing_weight: 0.0, fair_weight: 0.25, policy: mlp}
+  crossing_30: {crossing_weight: 30.0, fair_weight: 0.25, policy: mlp}
+  crossing_90: {crossing_weight: 90.0, fair_weight: 0.25, policy: mlp}
+  matched_full: {crossing_weight: 0.0, fair_weight: 0.0, policy: full}
+  matched_local: {crossing_weight: 0.0, fair_weight: 0.0, policy: local}

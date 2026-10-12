@@ -299,3 +299,33 @@ bash scripts/run.sh python scripts/view_residual.py --method residual_dqn \
 每个回合除原信号轨迹和逐车指标外，新增 `corrections.csv`，记录建议、修正及护栏后的请求。
 新实验不会覆盖 `outputs/arterial-50k/`；仍不使用预留最终测试集。
 本轮实际结果及公平性取舍见[强基线辅助DQN结果](residual-results.md)。
+# 泛化、奖励对齐与信息消融
+
+方案见[预先方案](iteration-plan.md)，算法与审计见[实现](iteration-implementation.md)。
+无需新增依赖。需要本地完整 `outputs/residual-50k/`（含6个模型、study/selection/network）；
+Git克隆仅含小型结果，不含这些大文件。缺少时先按上一节复现前置实验或转移完整输出。
+
+```bash
+bash scripts/run.sh python scripts/iteration_study.py --workers 3
+bash scripts/run.sh python scripts/summarize_iteration.py
+bash scripts/run.sh tensorboard --logdir outputs/iteration-50k/models --host 127.0.0.1
+```
+
+`--stage train/development/freeze/test`可分段执行。all依序训练、开发验证、冻结选择、
+审计开发结果，再生成/评价预留测试。源码/配置/历史模型不一致时拒绝复用输出。
+不完整训练重启，不从未记录的部分训练继续。测试结束后不以测试成绩追加选参。
+
+观看已评价的新开发案例（默认暂停，Play/Stop/Single Step；Delay越大越慢）：
+
+```bash
+bash scripts/run.sh python scripts/view_iteration.py \
+  --method crossing_30 --seed 11 \
+  --case downstream_slowdown_rate1_3001 --delay 200
+```
+
+可替换方法为actuated/max_pressure/aging/residual_dqn/fair_residual_dqn/excess_025/
+crossing_30/crossing_90/matched_full/matched_local。
+需求变动案例名如`tidal_rate1.2_3001`，窗口移动如`downstream_slowdown_window300_3001`。
+最终测试完成后可用`--split test --case downstream_slowdown_4001`观看。
+`--headless`会无界面回放并逐项核对冻结指标；查看不会生成尚未评价的测试案例。
+

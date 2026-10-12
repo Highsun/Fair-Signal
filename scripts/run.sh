@@ -13,7 +13,7 @@ for FAIR_SIGNAL_ARG in "$@"; do
 done
 if [[ "${1:-}" == python || "${1:-}" == python3 ]]; then
     case "${2:-}" in
-        view_arterial.py|*/view_arterial.py|view_residual.py|*/view_residual.py) FAIR_SIGNAL_GUI=1 ;;
+        view_arterial.py|*/view_arterial.py|view_residual.py|*/view_residual.py|view_iteration.py|*/view_iteration.py) FAIR_SIGNAL_GUI=1 ;;
     esac
 fi
 if [[ "$(uname -s)" == "Darwin" && "$FAIR_SIGNAL_GUI" == 1 && "$FAIR_SIGNAL_HEADLESS" == 0 ]]; then
