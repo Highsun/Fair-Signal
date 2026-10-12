@@ -1,0 +1,7 @@
+{
+  "workers": 1,
+  "wall_seconds": 561.2535253750011,
+  "cases": 198,
+  "complete_cases": 198,
+  "scope": "frozen methods; development only; reused by identity-checked full evaluation"
+}

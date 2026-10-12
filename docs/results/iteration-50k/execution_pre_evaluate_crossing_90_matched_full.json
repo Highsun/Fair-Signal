@@ -1,0 +1,11 @@
+{
+  "workers": 1,
+  "wall_seconds": 383.69086391699966,
+  "cases": 132,
+  "complete_cases": 132,
+  "scope": "frozen methods; development only; reused by identity-checked full evaluation",
+  "methods": [
+    "crossing_90",
+    "matched_full"
+  ]
+}

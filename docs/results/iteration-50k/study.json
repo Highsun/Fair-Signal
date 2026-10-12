@@ -1,0 +1,103 @@
+{
+  "reference_model_hashes": {
+    "residual_dqn/11": "c10cfafde1fa35e41ab77f63999b5c2c7003aa1b7c8d627ff47b6a529397fcf4",
+    "residual_dqn/22": "5fd0198babec995fa347f41581c40f9ffc40e11aa6835fdf9d34f845bfc61155",
+    "residual_dqn/33": "d8f8adf5078ab3b0d9fb9719ae3d1adf2df367110c63f5a05e1f69a8eafb375a",
+    "fair_residual_dqn/11": "da9e81d3ebe96c32495fffeb353b4e1207f0b2b2134078ad3c3cbf25a378fb80",
+    "fair_residual_dqn/22": "5af980adbd6833e9d580040c46e3249b159024fcb00e96d7cc72cb19199e1e62",
+    "fair_residual_dqn/33": "ab2a0aae3fd9a8368de90a81522405412cf1b020a94160e02b29771e591cae97"
+  },
+  "config": {
+    "label": "iteration-50k",
+    "reference": "outputs/residual-50k",
+    "env": {
+      "demand_seconds": 1800,
+      "drain_seconds": 900,
+      "queue_scale": 160.0
+    },
+    "training_steps": 50000,
+    "learning_starts": 1000,
+    "training_seeds": [
+      11,
+      22,
+      33
+    ],
+    "development_seeds": [
+      3001,
+      3002
+    ],
+    "test_seeds": [
+      4001,
+      4002,
+      4003,
+      4004,
+      4005,
+      4006,
+      4007,
+      4008,
+      4009,
+      4010
+    ],
+    "demand_multipliers": [
+      0.8,
+      1.0,
+      1.2
+    ],
+    "shifted_windows": [
+      [
+        300,
+        900
+      ],
+      [
+        900,
+        1500
+      ]
+    ],
+    "extension_seconds": 10,
+    "urgent_threshold": 90.0,
+    "guard_threshold": 180.0,
+    "hidden": [
+      128,
+      128
+    ],
+    "learning_rate": 0.0003,
+    "gamma": 0.99,
+    "buffer_size": 50000,
+    "batch_size": 64,
+    "train_freq": 4,
+    "target_update_interval": 1000,
+    "exploration_fraction": 0.5,
+    "variants": {
+      "excess_025": {
+        "crossing_weight": 0.0,
+        "fair_weight": 0.25,
+        "policy": "mlp"
+      },
+      "crossing_30": {
+        "crossing_weight": 30.0,
+        "fair_weight": 0.25,
+        "policy": "mlp"
+      },
+      "crossing_90": {
+        "crossing_weight": 90.0,
+        "fair_weight": 0.25,
+        "policy": "mlp"
+      },
+      "matched_full": {
+        "crossing_weight": 0.0,
+        "fair_weight": 0.0,
+        "policy": "full"
+      },
+      "matched_local": {
+        "crossing_weight": 0.0,
+        "fair_weight": 0.0,
+        "policy": "local"
+      }
+    }
+  },
+  "source_sha256": "ea8185c8ed7c2e3e5f51822ef14a121034a89cdf1881378e01d73a61baf51c44",
+  "residual_source_sha256": "5883f233241bcae6f543ee6b9bf20a3b7418cb7ffab7af879dd04e1079d618f8",
+  "reference_study_sha256": "06f01ae248fb225a55970cb5661c3bfaabe4950e08b4c9d8bf866c2a4196b203",
+  "reference_selection_sha256": "a65c43cb99ef4df14c840c6d5bc0334ab2e958fda9157f5dd0a118d42741dc31",
+  "endpoint": "fixed; no checkpoint or seed selection"
+}

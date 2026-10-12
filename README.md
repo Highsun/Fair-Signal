@@ -34,7 +34,8 @@
 短跑和环境联通检查都不构成算法收敛或优越性的证据。
 下一轮[泛化、奖励对齐与信息消融](docs/iteration-plan.md)已冻结方案并通过独立联通检查，
 新增首次超时事件奖励及参数匹配的信息消融，见[实现说明](docs/iteration-implementation.md)。
-正式实验完成后将补充开发泛化及预留测试结果，不以联通短跑数据作性能结论。
+已完成15个新增模型各5万步与528/528开发回合，见[迭代结果](docs/iteration-results.md)。
+两档首次超时奖励均未达到预定公平改进门槛，开发记录已冻结，预留测试尚未开启。
 设计细节见 [实现说明](docs/implementation.md)，实际安装见 [环境记录](docs/environment.md)。
 首轮实测与失败分析见 [短跑结果](docs/pilot-results.md)：传统基线暂时领先，不能宣称 DQN 更优。
 [加长验证](docs/stability-results.md) 保留首个训练种子的历史结果。

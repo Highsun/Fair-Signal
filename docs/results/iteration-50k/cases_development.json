@@ -1,0 +1,244 @@
+[
+  {
+    "id": "steady_rate0.8_3001",
+    "scenario": "steady",
+    "traffic": 3001,
+    "multiplier": 0.8,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_0.8"
+  },
+  {
+    "id": "steady_rate0.8_3002",
+    "scenario": "steady",
+    "traffic": 3002,
+    "multiplier": 0.8,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_0.8"
+  },
+  {
+    "id": "tidal_rate0.8_3001",
+    "scenario": "tidal",
+    "traffic": 3001,
+    "multiplier": 0.8,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_0.8"
+  },
+  {
+    "id": "tidal_rate0.8_3002",
+    "scenario": "tidal",
+    "traffic": 3002,
+    "multiplier": 0.8,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_0.8"
+  },
+  {
+    "id": "downstream_slowdown_rate0.8_3001",
+    "scenario": "downstream_slowdown",
+    "traffic": 3001,
+    "multiplier": 0.8,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_0.8"
+  },
+  {
+    "id": "downstream_slowdown_rate0.8_3002",
+    "scenario": "downstream_slowdown",
+    "traffic": 3002,
+    "multiplier": 0.8,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_0.8"
+  },
+  {
+    "id": "steady_rate1_3001",
+    "scenario": "steady",
+    "traffic": 3001,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1"
+  },
+  {
+    "id": "steady_rate1_3002",
+    "scenario": "steady",
+    "traffic": 3002,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1"
+  },
+  {
+    "id": "tidal_rate1_3001",
+    "scenario": "tidal",
+    "traffic": 3001,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1"
+  },
+  {
+    "id": "tidal_rate1_3002",
+    "scenario": "tidal",
+    "traffic": 3002,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1"
+  },
+  {
+    "id": "downstream_slowdown_rate1_3001",
+    "scenario": "downstream_slowdown",
+    "traffic": 3001,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1"
+  },
+  {
+    "id": "downstream_slowdown_rate1_3002",
+    "scenario": "downstream_slowdown",
+    "traffic": 3002,
+    "multiplier": 1.0,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1"
+  },
+  {
+    "id": "steady_rate1.2_3001",
+    "scenario": "steady",
+    "traffic": 3001,
+    "multiplier": 1.2,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1.2"
+  },
+  {
+    "id": "steady_rate1.2_3002",
+    "scenario": "steady",
+    "traffic": 3002,
+    "multiplier": 1.2,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1.2"
+  },
+  {
+    "id": "tidal_rate1.2_3001",
+    "scenario": "tidal",
+    "traffic": 3001,
+    "multiplier": 1.2,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1.2"
+  },
+  {
+    "id": "tidal_rate1.2_3002",
+    "scenario": "tidal",
+    "traffic": 3002,
+    "multiplier": 1.2,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1.2"
+  },
+  {
+    "id": "downstream_slowdown_rate1.2_3001",
+    "scenario": "downstream_slowdown",
+    "traffic": 3001,
+    "multiplier": 1.2,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1.2"
+  },
+  {
+    "id": "downstream_slowdown_rate1.2_3002",
+    "scenario": "downstream_slowdown",
+    "traffic": 3002,
+    "multiplier": 1.2,
+    "window": [
+      600,
+      1200
+    ],
+    "group": "rate_1.2"
+  },
+  {
+    "id": "downstream_slowdown_window300_3001",
+    "scenario": "downstream_slowdown",
+    "traffic": 3001,
+    "multiplier": 1.0,
+    "window": [
+      300,
+      900
+    ],
+    "group": "window_300"
+  },
+  {
+    "id": "downstream_slowdown_window300_3002",
+    "scenario": "downstream_slowdown",
+    "traffic": 3002,
+    "multiplier": 1.0,
+    "window": [
+      300,
+      900
+    ],
+    "group": "window_300"
+  },
+  {
+    "id": "downstream_slowdown_window900_3001",
+    "scenario": "downstream_slowdown",
+    "traffic": 3001,
+    "multiplier": 1.0,
+    "window": [
+      900,
+      1500
+    ],
+    "group": "window_900"
+  },
+  {
+    "id": "downstream_slowdown_window900_3002",
+    "scenario": "downstream_slowdown",
+    "traffic": 3002,
+    "multiplier": 1.0,
+    "window": [
+      900,
+      1500
+    ],
+    "group": "window_900"
+  }
+]

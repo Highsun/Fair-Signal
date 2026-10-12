@@ -1,0 +1,30 @@
+{
+  "source_sha256": "ea8185c8ed7c2e3e5f51822ef14a121034a89cdf1881378e01d73a61baf51c44",
+  "study_sha256": "71cce866c0b1c454f7391ee6d3a0730c992f117e6f1a87c744dbab2cbf7ff556",
+  "development_sha256": "91302d980802624572dcefbf3cd0580af59e2bf7a0d440a1d1116ab7e7efa0b7",
+  "selected_fairness": null,
+  "candidates": [
+    {
+      "method": "crossing_30",
+      "acceptable": false,
+      "over_threshold_fraction": 0.05629177988231196,
+      "mean_wait": 29.29544681619047,
+      "mean_system_time": 107.59162313873162
+    },
+    {
+      "method": "crossing_90",
+      "acceptable": false,
+      "over_threshold_fraction": 0.05741723719898231,
+      "mean_wait": 30.57967244022448,
+      "mean_system_time": 110.95953981846007
+    }
+  ],
+  "ordinary": {
+    "over_threshold_fraction": 0.05139456205400929,
+    "mean_wait": 29.333915698118087,
+    "mean_system_time": 108.47211330750478
+  },
+  "main_strategy": "residual_dqn",
+  "all_predeclared_variants_tested": true,
+  "test_was_unopened": true
+}

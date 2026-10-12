@@ -299,7 +299,7 @@ bash scripts/run.sh python scripts/view_residual.py --method residual_dqn \
 每个回合除原信号轨迹和逐车指标外，新增 `corrections.csv`，记录建议、修正及护栏后的请求。
 新实验不会覆盖 `outputs/arterial-50k/`；仍不使用预留最终测试集。
 本轮实际结果及公平性取舍见[强基线辅助DQN结果](residual-results.md)。
-# 泛化、奖励对齐与信息消融
+## 泛化、奖励对齐与信息消融
 
 方案见[预先方案](iteration-plan.md)，算法与审计见[实现](iteration-implementation.md)。
 无需新增依赖。需要本地完整 `outputs/residual-50k/`（含6个模型、study/selection/network）；
@@ -315,6 +315,16 @@ bash scripts/run.sh tensorboard --logdir outputs/iteration-50k/models --host 127
 审计开发结果，再生成/评价预留测试。源码/配置/历史模型不一致时拒绝复用输出。
 不完整训练重启，不从未记录的部分训练继续。测试结束后不以测试成绩追加选参。
 
+可选地，在三进程`--stage train`运行时，另开一个终端用一个进程提前回放冻结方法：
+
+```bash
+bash scripts/run.sh python scripts/pre_evaluate_iteration.py --workers 1
+```
+
+这时峰值为4个实验工作进程。训练及提前回放均结束后，再运行完整development阶段，
+通过输入身份检查复用已有结果。`--methods excess_025 crossing_30`可提前评价已经完成训练的
+新增配置，未完成的模型族会被拒绝；不要与完整development阶段同时写同一回合目录。
+
 观看已评价的新开发案例（默认暂停，Play/Stop/Single Step；Delay越大越慢）：
 
 ```bash
@@ -328,4 +338,3 @@ crossing_30/crossing_90/matched_full/matched_local。
 需求变动案例名如`tidal_rate1.2_3001`，窗口移动如`downstream_slowdown_window300_3001`。
 最终测试完成后可用`--split test --case downstream_slowdown_4001`观看。
 `--headless`会无界面回放并逐项核对冻结指标；查看不会生成尚未评价的测试案例。
-
