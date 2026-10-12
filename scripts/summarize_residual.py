@@ -32,6 +32,7 @@ from fair_signal.runtime import output_directory, project_root  # noqa: E402
 
 METRICS = (
     "mean_wait",
+    "mean_excess_wait",
     "p95_wait",
     "over_threshold_fraction",
     "mean_system_time",
@@ -132,20 +133,32 @@ def audit_case(directory, row, config):
     trips = ET.parse(directory / "episode_00000/tripinfo.xml").getroot().findall("tripinfo")
     if sum(float(t.get("waitingTime")) for t in trips) != trace.queue.sum():
         raise ValueError("Network stop integral differs from TripInfo")
+    excess = sum(max(float(t.get("waitingTime")) - env_config.wait_threshold, 0) for t in trips)
+    if not np.isclose(trace.fair_cost.sum() * env_config.queue_scale, excess):
+        raise ValueError("Fairness cost integral differs from lifetime excess waiting")
     if row.planned != row.departed + row.pending_insertion or (
         row.departed != row.arrived + row.running + row.abnormal_removals
     ):
         raise ValueError("Vehicle accounting mismatch")
-    return audit_signal_rows(trace.to_dict("records"), env_config), trips
+    return audit_signal_rows(trace.to_dict("records"), env_config), trips, decisions
 
 
 def summarize(output):
+    import torch
+    from stable_baselines3 import DQN
+
+    torch.set_num_threads(1)
     saved = json.loads((output / "study.json").read_text())
     if saved["source_sha256"] != source_digest() or saved["test_evaluated"]:
         raise ValueError("Source changed or test isolation violated")
     if saved["historical_core_sha256"] != historical_digest():
         raise ValueError("Historical core changed")
     config = saved["config"]
+    purpose = (
+        "development_validation"
+        if config["training_steps"] == 50000 and len(config["training_seeds"]) == 3
+        else "connectivity_check_not_performance_evidence"
+    )
     reference = output_directory(config["reference"])
     for name, digest in saved["reference_hashes"].items():
         if sha256(reference / name) != digest:
@@ -214,7 +227,7 @@ def summarize(output):
             if result["correction_effective"] != 0:
                 raise ValueError("Uncorrected baseline was corrected")
             reference_matches += 1
-        checked, trips = audit_case(directory, row, config)
+        checked, trips, decisions = audit_case(directory, row, config)
         intervals += checked
         ids = {
             v.get("id")
@@ -235,6 +248,25 @@ def summarize(output):
             "traffic_seed": row.traffic_seed,
             "cross_planned": len(ids),
             "cross_completed": len(cross),
+            "mean_excess_wait": sum(
+                max(float(t.get("waitingTime")) - EnvConfig(**config["env"]).wait_threshold, 0)
+                for t in trips
+            )
+            / row.planned,
+            "effective_extend": int(((decisions.choice == 1) & (decisions.effective == 1)).sum()),
+            "effective_urgent": int(((decisions.choice == 2) & (decisions.effective == 1)).sum()),
+            "effective_demand": int(
+                (
+                    (decisions.second < config["env"]["demand_seconds"])
+                    & (decisions.effective == 1)
+                ).sum()
+            ),
+            "effective_drain": int(
+                (
+                    (decisions.second >= config["env"]["demand_seconds"])
+                    & (decisions.effective == 1)
+                ).sum()
+            ),
         }
         for name, fields in (
             ("cross_mean_wait", ("waitingTime",)),
@@ -279,6 +311,23 @@ def summarize(output):
             raise ValueError("Unexpected update budget")
         if not report["weights_changed"] or not report["save_reload_weights_match"]:
             raise ValueError("Model update/reload verification failed")
+        model = DQN.load(directory / "model.zip", device="cpu")
+        if (
+            model.num_timesteps != report["decision_steps"]
+            or model._n_updates != report["gradient_updates"]
+            or model.observation_space.shape != (162,)
+            or model.action_space.n != 9
+            or sum(p.numel() for p in model.q_net.parameters()) != report["parameter_count"]
+            or any(not torch.isfinite(p).all() for p in model.policy.parameters())
+        ):
+            raise ValueError("Serialized model budget, dimensions or weights failed verification")
+        for key, value in report.items():
+            actual_value = getattr(row, key)
+            if isinstance(value, (int, float)) and not isinstance(value, bool):
+                if not np.isclose(actual_value, value):
+                    raise ValueError("Training CSV differs from raw report")
+            elif actual_value != value:
+                raise ValueError("Training CSV differs from raw report")
         if not (
             frame[
                 (frame.method == row.method) & (frame.training_seed == row.training_seed)
@@ -411,14 +460,55 @@ def summarize(output):
         axis.set_title(title)
         axis.grid(axis="y", alpha=0.2)
     fig.suptitle(
-        "Baseline-assisted DQN: development validation\n"
+        f"Baseline-assisted DQN: {purpose.replace('_', ' ')}\n"
         "Error bars: SD of model-seed means; no model-seed error for rule controllers"
     )
     fig.tight_layout()
     fig.savefig(destination / "comparison.png", dpi=160)
     plt.close(fig)
+    learning_paths = list((output / "models").glob("*/seed_*/learning.csv"))
+    if learning_paths:
+        fig, axes = plt.subplots(1, 2, figsize=(12, 4.5))
+        for method, color in zip(LEARNED, ("#4468a2", "#b65b69"), strict=True):
+            for index, seed in enumerate(config["training_seeds"]):
+                path = output / f"models/{method}/seed_{seed}/learning.csv"
+                if not path.exists():
+                    continue
+                episodes = pd.read_csv(path)
+                for axis, values in zip(
+                    axes,
+                    (
+                        episodes.mean_queue + episodes.mean_pending,
+                        episodes.correction_effective / episodes.correction_node_decisions,
+                    ),
+                    strict=True,
+                ):
+                    axis.plot(
+                        episodes.step,
+                        values.rolling(10, min_periods=1).mean(),
+                        color=color,
+                        linestyle=("-", "--", ":")[index % 3],
+                        alpha=0.8,
+                        label=LABELS[method] if index == 0 else None,
+                    )
+        axes[0].set_ylabel("Stopped + pending (rolling 10 episodes)")
+        axes[1].set_ylabel("Effective correction rate (rolling 10 episodes)")
+        for axis in axes:
+            axis.set_xlabel("Decision steps")
+            axis.grid(alpha=0.2)
+            axis.legend()
+        fig.suptitle("Training diagnostics; curves are not validation performance")
+        fig.tight_layout()
+        fig.savefig(destination / "training.png", dpi=160)
+        plt.close(fig)
     report = [
         "# Baseline-assisted DQN: audited development results",
+        "",
+        f"Purpose: `{purpose}`; {config['training_steps']} steps/model; "
+        f"{len(config['training_seeds'])} model seeds. No reserved test evaluated.",
+        "",
+        "Supplementary diagnostic added after inspecting results: mean_excess_wait "
+        "= mean(max(lifetime_stop_wait - 90, 0)); primary metrics unchanged.",
         "",
         "| Method | Complete | Mean wait | P95 | >90s | System time | Correction rate |",
         "| --- | --- | --- | --- | --- | --- | --- |",
@@ -443,6 +533,8 @@ def summarize(output):
         destination / "quality.json",
         {
             "source_sha256": source_digest(),
+            "purpose": purpose,
+            "posthoc_diagnostic": "mean_excess_wait; primary metrics unchanged",
             "historical_core_sha256": historical_digest(),
             "summary_script_sha256": sha256(Path(__file__)),
             "validation_cases": len(frame),

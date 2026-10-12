@@ -271,3 +271,31 @@ bash scripts/run.sh python scripts/diagnose_arterial.py
 校验一致时才复用。改变算法或参数请使用新的 `--output`，避免混用结果。
 本轮仅开发验证，不生成或运行预留测试集。
 完整结果与局限见[两路口结果](arterial-results.md)。
+
+## 强基线辅助 DQN
+
+新阶段保持两路口、原验证路线和共同信号约束，学习对感应式的有限修正。
+固定设计见[实验方案](residual-plan.md)，动作定义及流程图见[实现说明](residual-implementation.md)。
+需要本地已有完整的 `outputs/arterial-50k/`，作为网络、路线和传统选参的冻结来源；
+新克隆仓库时先按上一节运行两路口首轮，或传入对应版本的完整实验目录。
+在 `code/` 目录运行：
+
+```bash
+# 六个模型，各50000步；然后运行165个开发验证回合
+bash scripts/run.sh python scripts/residual_study.py --workers 3
+# 质量审计、成对差异和小型结果导出
+bash scripts/run.sh python scripts/summarize_residual.py
+# 查看训练损失、交通指标和修正频率
+bash scripts/run.sh tensorboard --logdir outputs/residual-50k/models --host 127.0.0.1
+# 查看模型调度，默认暂停，点击Play开始
+bash scripts/run.sh python scripts/view_residual.py --method residual_dqn \
+  --scenario tidal --seed 11 --traffic 2001 --delay 200
+```
+
+`--method fair_residual_dqn` 观看公平版本；`actuated` 观看不修正基线，
+`always_extend/always_urgent` 观看固定修正规则。`--headless` 只做精确回放核对。
+支持与首轮相同的 `steady/tidal/downstream_slowdown` 三类场景。
+模型在 `outputs/residual-50k/models/<方法>/seed_<种子>/model.zip`。
+每个回合除原信号轨迹和逐车指标外，新增 `corrections.csv`，记录建议、修正及护栏后的请求。
+新实验不会覆盖 `outputs/arterial-50k/`；仍不使用预留最终测试集。
+本轮实际结果及公平性取舍见[强基线辅助DQN结果](residual-results.md)。

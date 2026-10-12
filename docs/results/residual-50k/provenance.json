@@ -1,0 +1,13 @@
+{
+  "git_revision": "340f039388f247bf44216de2151a80c4d55655dd",
+  "platform": "macOS-27.0.1-arm64-arm-64bit",
+  "device": "cpu",
+  "torch_threads": 1,
+  "versions": {
+    "torch": "2.14.1",
+    "stable-baselines3": "2.9.0",
+    "gymnasium": "1.2.3",
+    "traci": "1.28.0",
+    "numpy": "2.5.4"
+  }
+}

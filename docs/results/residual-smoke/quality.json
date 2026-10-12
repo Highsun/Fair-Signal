@@ -1,7 +1,9 @@
 {
   "source_sha256": "5883f233241bcae6f543ee6b9bf20a3b7418cb7ffab7af879dd04e1079d618f8",
+  "purpose": "connectivity_check_not_performance_evidence",
+  "posthoc_diagnostic": "mean_excess_wait; primary metrics unchanged",
   "historical_core_sha256": "6f1b6809541b465761a26874f3284cae392ce262cf1060062bdff4a07af3e17c",
-  "summary_script_sha256": "0ba5b4d2df95f6404959f4fec727e5de1af9121c12c6631650a20120167e86e4",
+  "summary_script_sha256": "1b04e58a520c5c3a04cc5e082e171c4c10f7d93ee0030b8431e2afe58318f8dc",
   "validation_cases": 21,
   "complete_validation_cases": 21,
   "baseline_cases_exactly_reproduced": 9,
@@ -162,15 +164,15 @@
     "selection.json": "a65c43cb99ef4df14c840c6d5bc0334ab2e958fda9157f5dd0a118d42741dc31"
   },
   "exported_files": {
-    "summary.csv": "1968402dba3c975f86f7e5c7a674eefbb5aada5d00906715817bf05dd4f54d05",
-    "validation.csv": "b44964e4b04a05e6c3b97de982ef42a506eef606a366e02d7ea89f839e9f7f83",
+    "summary.csv": "31e011c58bdaab632f96a0fd1fac0cb79aff70835c55a5553f9a4be41a5a256b",
+    "validation.csv": "fb595f4b40159a9811c4db315be1b8e371c9516b0273abe68f5bd1a65b4b180d",
     "training.csv": "6ebc0a48485aae8d50d2f8ed19ab523071faadb801993ddd0634e112bc188288",
     "study.json": "6080a9f5644aae981adf2282722696848f715fee0dc8fcc5de793f5f13abc66f",
     "provenance.json": "0a1fef7b6000cd696fa9d208d0319eb74f4f3a22bfb02c951d1266e413928b31",
-    "report.md": "ad9e6b13d7d81529499f1bc7b03d0f30c0e99264afb4def5c8accca23f98c6b8",
-    "paired_differences.csv": "9e2f7d48425a66eb258e571ed52957798bcc2dea27abb24ddbe308accdfee6ba",
-    "comparison.png": "7ecb5736508c9ac69b88042e47e2b4d8548d2f674aee7434c80c91b10cca3285",
-    "per_seed.csv": "0e976ac1d109c826c6ba9ebdccdd1fcb00a9ee6fbf531edf5f5570b6b02c3790",
+    "report.md": "a533c44684c48733de90e662b41d2d1d287fb4ac7f71f69ee9a1fdfa15c64efd",
+    "paired_differences.csv": "d60111226a1fdf26d994aa858a76921c67f2c8d82b51950a256edb883419fbc7",
+    "comparison.png": "e2e07fe2f734765eafce69805bd57ca7c050aeb1c65b9d1215277702f4a7f735",
+    "per_seed.csv": "5a3dc03d76ef66d29e2114f7d49dee2264e97273313bedd5d216e0088fd9e107",
     "execution_all.json": "7ff58bf0c8b117132ad694122130f653e35d2f275a4e6128e3830801edd09852",
     "selection.json": "a65c43cb99ef4df14c840c6d5bc0334ab2e958fda9157f5dd0a118d42741dc31"
   }

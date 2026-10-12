@@ -1,5 +1,9 @@
 # Baseline-assisted DQN: audited development results
 
+Purpose: `connectivity_check_not_performance_evidence`; 128 steps/model; 1 model seeds. No reserved test evaluated.
+
+Supplementary diagnostic added after inspecting results: mean_excess_wait = mean(max(lifetime_stop_wait - 90, 0)); primary metrics unchanged.
+
 | Method | Complete | Mean wait | P95 | >90s | System time | Correction rate |
 | --- | --- | --- | --- | --- | --- | --- |
 | actuated | 3/3 | 30.97 | 97.82 | 5.22% | 112.89 | 0.00% |

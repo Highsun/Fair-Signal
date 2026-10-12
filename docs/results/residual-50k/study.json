@@ -1,0 +1,75 @@
+{
+  "config": {
+    "label": "residual-50k",
+    "reference": "outputs/arterial-50k",
+    "env": {
+      "demand_seconds": 1800,
+      "drain_seconds": 900,
+      "queue_scale": 160.0
+    },
+    "training_steps": 50000,
+    "learning_starts": 1000,
+    "training_seeds": [
+      11,
+      22,
+      33
+    ],
+    "validation_seeds": [
+      2001,
+      2002,
+      2003,
+      2004,
+      2005
+    ],
+    "reserved_test_seeds": [
+      4001,
+      4002,
+      4003,
+      4004,
+      4005,
+      4006,
+      4007,
+      4008,
+      4009,
+      4010
+    ],
+    "scenarios": [
+      "steady",
+      "tidal",
+      "downstream_slowdown"
+    ],
+    "methods": [
+      "actuated",
+      "max_pressure",
+      "aging",
+      "always_extend",
+      "always_urgent",
+      "residual_dqn",
+      "fair_residual_dqn"
+    ],
+    "extension_seconds": 10,
+    "urgent_threshold": 90.0,
+    "fair_weight": 1.0,
+    "guard_threshold": 180.0,
+    "hidden": [
+      128,
+      128
+    ],
+    "learning_rate": 0.0003,
+    "gamma": 0.99,
+    "buffer_size": 50000,
+    "batch_size": 64,
+    "train_freq": 4,
+    "target_update_interval": 1000,
+    "exploration_fraction": 0.5
+  },
+  "source_sha256": "5883f233241bcae6f543ee6b9bf20a3b7418cb7ffab7af879dd04e1079d618f8",
+  "historical_core_sha256": "6f1b6809541b465761a26874f3284cae392ce262cf1060062bdff4a07af3e17c",
+  "test_evaluated": false,
+  "reference_hashes": {
+    "study.json": "c6cd1467c029c94aff44933d90fe5d468868df86d9938ae0f7bed742bf15c7c0",
+    "selection.json": "a65c43cb99ef4df14c840c6d5bc0334ab2e958fda9157f5dd0a118d42741dc31",
+    "validation.csv": "6826f35115d02d458fcb2712ff935970fffbb8eb7f9b91ea8f1274b56ddc1625"
+  },
+  "selection": "fixed 50000-step endpoint; no new model selection"
+}
